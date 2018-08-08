@@ -76,7 +76,8 @@ function param = NDF_with_Plasticity_Parameters()
     param.TForgetOff= param.TStimOn(2:end);
     param.Tmax = Tmax2;
 
-    
+    param.dt_store = 50;
+
     %% randomize stimlus location
     stimLoc = randi(nx,iter,1)-nx/2; % in training period
     stimLoc_theta = stimLoc/nx*2*pi;
@@ -86,4 +87,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.stimLoc_theta = [stimLoc_theta; stimLoc_test/nx*2*pi];
 
     %% additional parameters for plasticity
-    param.alpha = 0.5;
+    a = 0.5;
+    param.alpha = a;
+    % x: nx by 1, x: post-syn, x': pre-syn
+    param.fM = @(x,dx) ( ((x/20).^(2*a)) .* dx ) * x';

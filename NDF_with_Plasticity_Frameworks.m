@@ -1,6 +1,6 @@
 clc;clear all;close all;    
 %% load parameters
-param = NDF_with_Plasticity_Parameters();
+param = NDF_with_Plasticity_Parameters()
 
 
 %% unpack Connectivity profile 
@@ -15,7 +15,7 @@ MEE0 = MEE; MEE = a*MEE;
 param.MEE_perturbed = MEE;
 
 %% output time resolution
-dt_store = 50; %ms
+dt_store = param.dt_store;
 
 %% pack initial values
 nx = param.N;

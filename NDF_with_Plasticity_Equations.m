@@ -44,7 +44,8 @@ K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 a = param.alpha;
 if isTraining  && any( (t>TStimOff).* (t<TDelayOff) )
     %
-    dMEE= -1/param.TJ * ( (RE/100).^(2*a) .* dRe_) * RE' ;
+    fM = param.fM;
+    dMEE= -1/param.TJ * fM(RE,dRe_);
     %
 else 
     dMEE=zeros(N,N);
