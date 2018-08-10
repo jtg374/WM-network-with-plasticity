@@ -1,3 +1,4 @@
+
 function param = NDF_with_Plasticity_Parameters()
     %% Time constants
     % % neurons 
@@ -90,4 +91,4 @@ function param = NDF_with_Plasticity_Parameters()
     a = 0.5;
     param.alpha = a;
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM = @(x,dx) ( ((x/20).^(2*a)) .* dx ) * x';
+    param.fM = @(x,dx) ( ((x/20).^(2*a)+1) .* dx ) * x';
