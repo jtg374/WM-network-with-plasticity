@@ -45,6 +45,15 @@ function param = NDF_with_Plasticity_Parameters()
     param.MIE = JIE*MIE;
     param.MEI = JEI*MEI;
     param.MII = JII*MII;
+
+    %% Perturbations
+    a = .9;
+    MEE0 = MEE; MEE = a*MEE; 
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'global';
+    param.perturbation_strength = a;
+    
     
     %% External Input
     JEO = 2*J;
@@ -91,4 +100,4 @@ function param = NDF_with_Plasticity_Parameters()
     a = 0.5;
     param.alpha = a;
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM = @(x,dx) ( ((x/20).^(2*a)+1) .* dx ) * x';
+    param.fM = @(x,dx) ( ((x/20).^(2*a)+10) .* dx ) * x';

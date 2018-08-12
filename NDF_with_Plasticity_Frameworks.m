@@ -9,11 +9,6 @@ MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
 
-%% Perturbations
-a = .97;
-MEE0 = MEE; MEE = a*MEE; 
-param.MEE_perturbed = MEE;
-
 %% output time resolution
 dt_store = param.dt_store;
 
