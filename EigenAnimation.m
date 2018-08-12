@@ -1,8 +1,9 @@
-param = load('param.mat')
-load('result.mat','MEEt')
+param = load('param.mat');
+x = param.x;
+load('results.mat','MEEt');
 figure('Position',[50 100 1250 500])
 nn=5;c = winter(nn);%c=fliplr(c);
-[V,D] = sorteigs((MEEt(:,:,1)-eye(nx)) - MEI/ (MII + eye(nx)) * MIE);
+[V,D] = sorteigs((MEEt(:,:,1)-eye(param.N)) - param.MEI/ (param.MII + eye(param.N)) * param.MIE);
 subplot(1,2,1)
 hold on
 line1 = plot(real(diag(D)));
@@ -28,7 +29,7 @@ f = getframe(gcf);
 [im,map] = rgb2ind(f.cdata,256,'nodither');
 im(:,:,1,1) = rgb2ind(f.cdata,map,'nodither');
 for i=2:size(MEEt,3)
-    [V,D] = sorteigs((MEEt(:,:,i)-eye(nx)) - MEI / (MII + eye(nx)) * MIE);
+    [V,D] = sorteigs((MEEt(:,:,i)-eye(param.N)) - param.MEI / (param.MII + eye(param.N)) * param.MIE);
 %     line1.YData = real(diag(D));
     set(line1,'YData',real(diag(D)));
 %     points1.YData = real(diag(D(1:nn,1:nn)));
