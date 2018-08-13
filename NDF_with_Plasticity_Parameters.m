@@ -100,4 +100,5 @@ function param = NDF_with_Plasticity_Parameters()
     a = 0.5;
     param.alpha = a;
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM = @(x,dx) ( ((x/20).^(2*a)+10) .* dx ) * x';
+    param.fM_expr = "@(x,dx) ( ((x/20).^(2*a)+10) .* dx ) * x'";
+    param.fM = eval(param.fM_expr);
