@@ -55,14 +55,14 @@ mkdir(datapath)
 
 % 
 
-figure(2); %imagesc([RE RE1])
+h2=figure(2); %imagesc([RE RE1])
 subplot(2,1,1);imagesc(RE(:,(t<=param.TDelayOff(10))));title('first 10 trails')
 subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))));title('last 10 trails, last one without plasticity')
-saveas(gcf,[datapath,'/2.fig'])
-saveas(gcf,[datapath,'/2.jpg'])
+saveas(h2,[datapath,'/2.fig'])
+saveas(h2,[datapath,'/2.jpg'])
 
 x = param.x;
-figure(7);hold on
+h7=figure(7);hold on;
 firstTestDelay = t>=TStimOff(param.nTrailTrain+1) & t<TDelayOff(param.nTrailTrain+1) ;
 colors = copper(sum(firstTestDelay));
 set(gca,'ColorOrder',colors)
@@ -75,8 +75,8 @@ xlim([-pi pi]);
 set(gca,'Ytick',0:50:100,'FontSize',14)
 ylim([0 120])
 hold off
-saveas(gcf,[datapath,'/7.fig'])
-saveas(gcf,[datapath,'/7.jpg'])
+saveas(h7,[datapath,'/7.fig'])
+saveas(h7,[datapath,'/7.jpg'])
 
 
 % figure(3);hold on
@@ -238,4 +238,4 @@ saveas(gcf,[datapath,'/7.jpg'])
 % % 
 %% save results
 save([datapath,'/param.mat'],'-struct','param');
-save([datapath,'/results.mat'],'RE','RI','MEEt');
+save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
