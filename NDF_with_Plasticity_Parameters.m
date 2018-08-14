@@ -53,10 +53,12 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% Perturbations
     a = .85;
-    MEE0 = MEE; MEE = a*MEE; 
+    index_x = 0:dx:pi/8;
+    index = floor((index_x+pi)/dx)+1;
+    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'global';
+    param.perturbation_type = 'local-rowwise(postsyn)';
     param.perturbation_strength = a;
     
     
