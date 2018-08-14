@@ -41,13 +41,18 @@ function param = NDF_with_Plasticity_Parameters()
     MIE = MEE;
     MII = MEI;
 
-    param.MEE = JEE*MEE;
-    param.MIE = JIE*MIE;
-    param.MEI = JEI*MEI;
-    param.MII = JII*MII;
+    MEE = JEE*MEE;
+    MIE = JIE*MIE;
+    MEI = JEI*MEI;
+    MII = JII*MII;
+
+    param.MEE = MEE;
+    param.MIE = MIE;
+    param.MEI = MEI;
+    param.MII = MII;
 
     %% Perturbations
-    a = .9;
+    a = .85;
     MEE0 = MEE; MEE = a*MEE; 
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
@@ -97,8 +102,6 @@ function param = NDF_with_Plasticity_Parameters()
     param.stimLoc_theta = [stimLoc_theta; stimLoc_test/nx*2*pi];
 
     %% additional parameters for plasticity
-    a = 0.5;
-    param.alpha = a;
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = "@(x,dx) ( ((x/20).^(2*a)+10) .* dx ) * x'";
+    param.fM_expr = "@(x,dx) ( ((x/20).^(2*0.5)+10) .* dx ) * x'";
     param.fM = eval(param.fM_expr);
