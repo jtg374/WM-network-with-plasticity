@@ -79,7 +79,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tstim = 500;
     Tmemory = 3000;
     Tforget = Tstim*2;
-    iter=50;
+    iter=500;
     
     Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
     Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
