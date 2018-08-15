@@ -52,7 +52,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.MII = MII;
 
     %% Perturbations
-    a = 1.03;
+    a = 1.1;
     % index_x = 0:dx:pi/8;
     % index = floor((index_x+pi)/dx)+1;
     % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
@@ -79,7 +79,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tstim = 500;
     Tmemory = 3000;
     Tforget = Tstim*2;
-    iter=500;
+    iter=50;
     
     Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
     Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
@@ -108,5 +108,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = "@(x,dx) ( ((x/20).^(2*0.5)+10) .* dx ) * x'";
+    param.fM_expr = '@(x,dx) ( ((x/20).^(2*0.5)+10) .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
