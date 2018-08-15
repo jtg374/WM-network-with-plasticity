@@ -52,7 +52,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.MII = MII;
 
     %% Perturbations
-    a = 1.15;
+    a = 1.03;
     % index_x = 0:dx:pi/8;
     % index = floor((index_x+pi)/dx)+1;
     % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
