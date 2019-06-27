@@ -15,7 +15,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.TJ = 1e4;
     
     %% Discretizing the space x
-    nx = 80;
+    nx = 64;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
     
@@ -52,17 +52,26 @@ function param = NDF_with_Plasticity_Parameters()
     param.MII = MII;
 
     %% Perturbations
-    a = 1.1;
-    % index_x = 0:dx:pi/8;
-    % index = floor((index_x+pi)/dx)+1;
-    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    a = 0.9;
+%     % % sharp local perturbation 
+%     index_x = 0:dx:pi/8;
+%     index = floor((index_x+pi)/dx)+1;
+%     MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+%     % % smooth local perturbation
+%     perturbation = 1 - (1-a)*exp(-((x-0.125*pi)/(pi/2)).^2);
+%     param.perturbation = perturbation;
+%     % post-syn-gain
+%     perturbation = repmat(perturbation,nx,1);
+%     MEE0 = MEE; MEE = MEE.*perturbation;
+    % % global perturbation
     MEE0 = MEE; MEE = MEE*a;
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
     % param.perturbation_type = 'local-rowwise(postsyn)';
     % param.perturbation_index = index_x;
-    param.perturbation_type = 'global';
+    param.perturbation_type = 'local_sharp';
     param.perturbation_strength = a;
+
     
     
     %% External Input
@@ -79,7 +88,8 @@ function param = NDF_with_Plasticity_Parameters()
     Tstim = 500;
     Tmemory = 3000;
     Tforget = Tstim*2;
-    iter=500;
+    
+    iter=400; % number of training trails
     
     Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
     Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
@@ -108,5 +118,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( ((x/20).^(2*0.5)+10) .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( ((x/20).^(2*0.5)) .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);

@@ -50,14 +50,17 @@ clear y
 close all
 
 
-datapath = ['../../data/' datestr(now,'yymmdd-HH-MM')];
+datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd-HH-MM')];
 mkdir(datapath)
 
 % 
 
 h2=figure(2); %imagesc([RE RE1])
 subplot(2,1,1);imagesc(RE(:,(t<=param.TDelayOff(10))));title('first 10 trails')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
 subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))));title('last 10 trails, last one without plasticity')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
+xlabel('Time (a.u.)','FontSize',14)
 saveas(h2,[datapath,'/2.fig'])
 saveas(h2,[datapath,'/2.jpg'])
 
@@ -67,7 +70,7 @@ firstTestDelay = t>=TStimOff(param.nTrailTrain+1) & t<TDelayOff(param.nTrailTrai
 colors = copper(sum(firstTestDelay));
 set(gca,'ColorOrder',colors)
 plot(x,RE(:,firstTestDelay)','LineWidth',0.5)
-title('Spatial pattern of activity at every 1 s in test trail')
+title('Evolution of activity pateern at delay of last trail')
 xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
 set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
 set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
