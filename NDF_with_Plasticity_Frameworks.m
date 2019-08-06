@@ -50,7 +50,7 @@ clear y
 close all
 
 
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd-HH-MM')];
+datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
 mkdir(datapath)
 
 % 
