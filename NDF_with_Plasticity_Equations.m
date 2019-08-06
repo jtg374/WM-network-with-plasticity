@@ -30,8 +30,8 @@ qI = @(x) x.*(x>0);
 
 % main ode eqs
 % % Neurons Populations and Synapses
-dRe = 1./param.TE .*( -RE + qE(MEE*SEE - MEI*SEI + IEo*IStim - mean(IEo)*IWipe));
-dRi = 1./param.TI .*( -RI + qI(MIE*SIE - MII*SII + IIo*IStim - mean(IIo)*IWipe));
+dRe = 1./param.TE .*( -RE + qE(MEE*SEE - MEI*SEI + IEo*IStim)*(1-IWipe));
+dRi = 1./param.TI .*( -RI + qI(MIE*SIE - MII*SII + IIo*IStim)*(1-IWipe));
 dSee= 1./param.TEE.*(-SEE + RE);
 dSie= 1./param.TIE.*(-SIE + RE);
 dSei= 1./param.TEI.*(-SEI + RI);
