@@ -37,8 +37,8 @@ dSie= 1./param.TIE.*(-SIE + RE);
 dSei= 1./param.TEI.*(-SEI + RI);
 dSii= 1./param.TII.*(-SII + RI);
 % % External Stimilus
-dIt =           1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
-dIw = param.JWipe./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
+dIt = 1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
+dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
 % % Plasticity
 K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 if isTraining  && any( (t>TStimOff).* (t<TDelayOff) )

@@ -80,7 +80,6 @@ function param = NDF_with_Plasticity_Parameters()
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;
-    param.JWipe=2.5;
     
     %% simulation timing in milisecond
 
