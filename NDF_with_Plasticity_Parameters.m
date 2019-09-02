@@ -67,28 +67,49 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = 0.9;
-%     % % sharp local perturbation 
-%     index_x = 0:dx:pi/8;
-%     index = floor((index_x+pi)/dx)+1;
-%     MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-%     % % smooth local perturbation
-%     perturbation = 1 - (1-a)*exp(-((x-0.125*pi)/(pi/2)).^2);
-%     param.perturbation = perturbation;
-%     % post-syn-gain
-%     perturbation = repmat(perturbation,nx,1);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-    % % global perturbation
-    MEE0 = MEE; MEE = MEE*a;
+    a = .97;
+    % %sharp local perturbation 
+    index_x = 0:dx:pi/8;
+    index = floor((index_x+pi)/dx)+1;
+    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'local-rowwise(postsyn)';
-    % param.perturbation_index = index_x;
-    param.perturbation_type = 'local_sharp';
-    param.perturbation_strength = a;
+    param.perturbation_type = 'local-rowwise(postsyn)';
+    param.perturbation_strength = a;    
+%     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'local-colwise(presyn)';
+%     param.perturbation_strength = a;    
+    % % smooth local perturbation
+%     index_x = 0:dx:pi/8;
+%     index = floor((index_x+pi)/dx)+1;
+%     perturbation = 1 - (1-a)*exp(-((x-0.125*pi)/(pi/2)).^2);
+%     param.perturbation = perturbation;
+%     perturbation = repmat(perturbation',1,nx);
+%     MEE0 = MEE; MEE = MEE.*perturbation;
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'local-rowwise(postsyn)';
+%     param.perturbation_strength = a;    
+%     param.perturbation_index = index_x;
+% % % global perturbation
+%     MEE0 = MEE; MEE = MEE*a;
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'Global';
+%     param.perturbation_strength = a;
+% % random perturbation
+%     perturbation = 10.^(randn(nx)/1000);
+%     MEE0 = MEE; MEE = MEE.*perturbation;
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'random';
+    % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
+    % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
 
-    
-    
     %% External Input
     JEO = 2*J;
     IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
