@@ -1,4 +1,3 @@
-
 function param = NDF_with_Plasticity_Parameters()
     %% Time constants
     % % neurons 
@@ -51,6 +50,22 @@ function param = NDF_with_Plasticity_Parameters()
     param.MEI = MEI;
     param.MII = MII;
 
+    %% Transfer Function
+    NE = 2;
+    thE = 10;
+    sigE = 40;
+    maxfE = 100;
+    qE = @(x) maxfE*(x-thE).^NE./(sigE^NE+(x-thE).^NE).*(x>thE);
+    
+    NI = 2;
+    thI = 10;
+    sigI = 40;
+    maxfI = 100;
+    qI = @(x) maxfI*(x-thI).^NI./(sigI^NI+(x-thI).^NI).*(x>thI);
+%     param.qE = qE;
+%     param.qI = qI;
+    param.qE = @(x) x.*(x>0);
+    param.qI = @(x) x.*(x>0);
     %% Perturbations
     a = 0.9;
 %     % % sharp local perturbation 
@@ -97,8 +112,8 @@ function param = NDF_with_Plasticity_Parameters()
     Tmax1 = Tmax+Tforget; % Stimilus onset time in test period    
     Tmax2 = Tmax1+Tstim+Tinter; 
     
-    param.nTrailTrain = iter;
-    param.nTrailTest = 1;
+    param.nTrialTrain = iter;
+    param.nTrialTest = 1;
     param.TStimOn   = [Tinit, Tmax1];
     param.TStimOff  = [Tinit+Tstim, Tmax1+Tstim];
     param.TDelayOff = [Tinit+Tstim+Tmemory, Tmax2];

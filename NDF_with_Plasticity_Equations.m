@@ -15,18 +15,18 @@ TStimOn   = param.TStimOn;
 TStimOff  = param.TStimOff;
 TDelayOff = param.TDelayOff;
 TForgetOff= param.TForgetOff;
-nTrail    = sum(t>=TStimOn);
-isTraining = nTrail<=param.nTrailTrain;
+nTrial    = sum(t>=TStimOn);
+isTraining = nTrial<=param.nTrialTrain;
 
 % set stimulus location
 shift=0;
-if nTrail
-    shift = param.stimLoc(nTrail);
+if nTrial
+    shift = param.stimLoc(nTrial);
 end
 IEo = circshift(param.IEo,shift);IIo = circshift(param.IIo,shift);
 % transfer function
-qE = @(x) x.*(x>0);
-qI = @(x) x.*(x>0);
+qE = param.qE;
+qI = param.qI;
 
 % main ode eqs
 % % Neurons Populations and Synapses
