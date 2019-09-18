@@ -72,7 +72,7 @@ RE = Rt(:,:,1)';RI = Rt(:,:,2)';
 % close all
 
 
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
+datapath = ['../../Data/WM_Plasticity/PlusHomeostasis_' datestr(now,'yymmdd_HH_MM')];
 mkdir(datapath)
 
 % 
