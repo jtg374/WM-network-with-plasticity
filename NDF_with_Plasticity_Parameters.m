@@ -51,21 +51,23 @@ function param = NDF_with_Plasticity_Parameters()
     param.MII = MII;
 
     %% Transfer Function
-    NE = 2;
+    NE = 3;
     thE = 10;
-    sigE = 40;
+    sigE = 100;
     maxfE = 100;
     qE = @(x) maxfE*(x-thE).^NE./(sigE^NE+(x-thE).^NE).*(x>thE);
     
-    NI = 2;
+    NI = 3;
     thI = 10;
-    sigI = 40;
+    sigI = 100;
     maxfI = 100;
     qI = @(x) maxfI*(x-thI).^NI./(sigI^NI+(x-thI).^NI).*(x>thI);
-%     param.qE = qE;
-%     param.qI = qI;
-    param.qE = @(x) x.*(x>0);
-    param.qI = @(x) x.*(x>0);
+    param.qE = qE;
+    param.qI = qI;
+%     param.qE = @(x) x.*(x>0);
+%     param.qI = @(x) x.*(x>0);
+%     param.qE = @(x) 7*((0.2*(x-1)+0.5).*(x<=1) + (2*(x-1)+0.5).*(x>1).*(x<=2) + (1*(x-2)+2.5).*(x>2).*(x<=14) + 14.5.*(x>14));
+%     param.qI = @(x) x; 
     %% Perturbations
     a = .97;
     % %sharp local perturbation 
@@ -93,7 +95,7 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.perturbation_type = 'local-rowwise(postsyn)';
 %     param.perturbation_strength = a;    
 %     param.perturbation_index = index_x;
-% % % global perturbation
+% % global perturbation
 %     MEE0 = MEE; MEE = MEE*a;
 %     param.MEE = MEE;
 %     param.MEE_unperturbed = MEE0;
@@ -105,53 +107,52 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.MEE = MEE;
 %     param.MEE_unperturbed = MEE0;
 %     param.perturbation_type = 'random';
-    % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
-    % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
+%     previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190917_19_47_\results.mat");
+%     MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
 
     %% External Input
     JEO = 2*J;
-    IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
+    IEO_init = 3.5*(exp(-(x/(pi/4)).^2)');
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;
+    param.IEc = 15*ones(nx,1); 
+    param.IIc = 0;
     
     %% simulation timing in milisecond
 
-    T_on = 500; %ms
+    T_on = 1000; %ms
     Tstim = 500;
-    Tmemory = 3000;
-    Tforget = Tstim*2;
+    Tmemory = 4500;
     
-    iter=400; % number of training trails
-    
-    Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
-    Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
+    iter=20; % number of training trails
 
-    Tinter = 6000;  % memory time in test period
-    Tmax1 = Tmax+Tforget; % Stimilus onset time in test period    
-    Tmax2 = Tmax1+Tstim+Tinter; 
-    
-    param.nTrialTrain = iter;
-    param.nTrialTest = 1;
-    param.TStimOn   = [Tinit, Tmax1];
-    param.TStimOff  = [Tinit+Tstim, Tmax1+Tstim];
-    param.TDelayOff = [Tinit+Tstim+Tmemory, Tmax2];
-    param.TForgetOff= param.TStimOn(2:end);
-    param.Tmax = Tmax2;
+    tTrial = T_on+Tstim+Tmemory;
 
+    TrialOn = 0:tTrial:tTrial*(iter-1);
+    TStimOn = TrialOn + T_on;
+    TStimOff = TStimOn + Tstim;
+    TrialOff = TStimOff + Tmemory;
+    
+    param.nTrial = iter;
+    param.TrialOn = TrialOn;
+    param.TrialOff = TrialOff;
+    param.TStimOn   = TStimOn;
+    param.TStimOff  = [TStimOff];
+    
     param.dt_store = 50;
 
     %% randomize stimlus location
     stimLoc = randi(nx,iter,1)-nx/2; % in training period
     stimLoc_theta = stimLoc/nx*2*pi;
-    stimLoc_test = 0; 
+%     stimLoc_test = 0; 
 
-    param.stimLoc = [stimLoc; stimLoc_test];
-    param.stimLoc_theta = [stimLoc_theta; stimLoc_test/nx*2*pi];
+    param.stimLoc = [stimLoc];
+    param.stimLoc_theta = [ stimLoc_theta ];
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( ((x/20).^(2*0.5)) .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( (1) .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);

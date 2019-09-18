@@ -9,42 +9,37 @@ MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
 
-%% output time resolution
-dt_store = param.dt_store;
-
-%% pack initial values
-nx = param.N;
-y0 = [0;              % Stimlus Current Strength
-      0;              % Wipe Current Strength
-      zeros(6*nx,1);  % 6*N state variables
-      reshape(MEE,nx*nx,1) % E to E Connection Strength
-      ]; 
 %% load timing
+dt_store = param.dt_store;
+nTrial = param.nTrial;
+TrialOn = param.TrialOn;
 TStimOn   = param.TStimOn;
 TStimOff  = param.TStimOff;
-TDelayOff = param.TDelayOff;
-Tmax = param.Tmax;
+TrialOff = param.TrialOff;
+
+%% additional parameters
+nx = param.N;
 
 %% Solving ODE equations
-clear textprogressbar % will cause trouble if integrate with @odetpbar while textprogressbar is in environment
-options = odeset('RelTol',1e-3,'AbsTol',1e-5,'OutputFcn',@odetpbar); % will print progressbar
-disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
-[t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
-    0:dt_store:Tmax,y0,options);
-disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
-
+t = 0:dt_store:TrialOff(end);
 nt = length(t);
-Mt = y(:,nx*6+3:end);MEEt = reshape(Mt,nt,nx,nx);
-MEEt = MEEt(TDelayOff/dt_store,:,:);
-MEEt = permute(MEEt,[2 3 1]); % put time on 3rd dimention
-Rt = y(:,3:nx*6+2);Rt = reshape(Rt,nt,nx,6);
-RE = Rt(:,:,1)';RI = Rt(:,:,2)';SEE = Rt(:,:,3)';SIE = Rt(:,:,4)';SEI = Rt(:,:,5)';SII = Rt(:,:,6)'; % put time on 2nd dimention
-clear Rt;
-% Input_forget=y(:,2);
-% Input_stim = y(:,1); 
-% Input = Input_stim - Input_forget;
-clear y
-
+y = zeros(nt,6*nx);
+MEEt = zeros(nx,nx,nTrial+1);MEEt(:,:,1) = MEE;
+for iTrial = 1:nTrial
+    disp(['Trial ',num2str(iTrial)])
+    y0 = [ones(6*nx,1);  % 6*N state variables
+        reshape(MEEt(:,:,iTrial),nx*nx,1) % E to E Connection Strength
+    ]; 
+    options = odeset('RelTol',1e-3,'AbsTol',1e-5);
+    tIndex = floor(TrialOn(iTrial)/dt_store):floor(TrialOff(iTrial)/dt_store);
+    [t1,y1] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
+        TrialOn(iTrial):dt_store:TrialOff(iTrial),y0,options);
+    y(tIndex+1,:) = y1(:,1:6*nx);
+    MEE_last = y1(end,nx*6+1:end);
+    MEEt(:,:,iTrial+1) = reshape(MEE_last,nx,nx);
+end
+Rt = reshape(y,nt,nx,6);
+RE = Rt(:,:,1)';RI = Rt(:,:,2)';
 
 %% Figures
 close all
@@ -54,32 +49,37 @@ datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(no
 mkdir(datapath)
 
 % 
+x = param.x;
+h1=figure(1);
+plot(t(t<=param.TrialOff(1)),RE(x==0,t<=param.TrialOff(1)));
+xlabel('time (ms)')
+ylabel('activity')
 
 h2=figure(2); %imagesc([RE RE1])
-subplot(2,1,1);imagesc(RE(:,(t<=param.TDelayOff(10))));title('first 10 trials')
+subplot(2,1,1);imagesc(RE(:,(t<=param.TrialOff(10))));title('first 10 trials')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
-subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))));title('last 10 trials, last one without plasticity')
+subplot(2,1,2);imagesc(RE(:,(t>param.TrialOn(end-9))));title('last 10 trials, last one without plasticity')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
 xlabel('Time (a.u.)','FontSize',14)
 saveas(h2,[datapath,'/2.fig'])
 saveas(h2,[datapath,'/2.jpg'])
 
-x = param.x;
-h7=figure(7);hold on;
-firstTestDelay = t>=TStimOff(param.nTrialTrain+1) & t<TDelayOff(param.nTrialTrain+1) ;
-colors = copper(sum(firstTestDelay));
-set(gca,'ColorOrder',colors)
-plot(x,RE(:,firstTestDelay)','LineWidth',0.5)
-title('Evolution of activity pateern at delay of last trial')
-xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
-set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
-set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
-xlim([-pi pi]);
-set(gca,'Ytick',0:50:100,'FontSize',14)
-ylim([0 120])
-hold off
-saveas(h7,[datapath,'/7.fig'])
-saveas(h7,[datapath,'/7.jpg'])
+% x = param.x;
+% h7=figure(7);hold on;
+% firstTestDelay = t>=TStimOff(end) & t<TDelayOff(end) ;
+% colors = copper(sum(firstTestDelay));
+% set(gca,'ColorOrder',colors)
+% plot(x,RE(:,firstTestDelay)','LineWidth',0.5)
+% title('Evolution of activity pateern at delay of last trial')
+% xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
+% set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
+% set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+% xlim([-pi pi]);
+% set(gca,'Ytick',0:50:100,'FontSize',14)
+% ylim([0 120])
+% hold off
+% saveas(h7,[datapath,'/7.fig'])
+% saveas(h7,[datapath,'/7.jpg'])
 
 
 % figure(3);hold on
@@ -241,4 +241,4 @@ saveas(h7,[datapath,'/7.jpg'])
 % % 
 %% save results
 save([datapath,'/param.mat'],'-struct','param');
-save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
+save([datapath,'/results.mat'],'t','RE','RI','MEEt');
