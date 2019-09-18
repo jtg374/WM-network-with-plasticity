@@ -125,7 +125,10 @@ function param = NDF_with_Plasticity_Parameters()
     Tstim = 500;
     Tmemory = 4500;
     
-    iter=20; % number of training trails
+    iter=1e4; % number of training trails
+    nTrialBatch = 1e2; % number of trials after which to run a homeostasis training
+
+    THomeo = 
 
     tTrial = T_on+Tstim+Tmemory;
 
@@ -134,7 +137,8 @@ function param = NDF_with_Plasticity_Parameters()
     TStimOff = TStimOn + Tstim;
     TrialOff = TStimOff + Tmemory;
     
-    param.nTrial = iter;
+    param.nTrial = iter; 
+    param.nTrialBatch = 
     param.TrialOn = TrialOn;
     param.TrialOff = TrialOff;
     param.TStimOn   = TStimOn;
@@ -158,4 +162,4 @@ function param = NDF_with_Plasticity_Parameters()
     param.TJ_delay = 1e4;
 
     %% homeostatic plasticity
-    param.TJ_homeostasis
+    param.TJ_homeostasis = 1e6;
