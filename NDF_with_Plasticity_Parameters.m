@@ -10,8 +10,6 @@ function param = NDF_with_Plasticity_Parameters()
     param.TII = 10;
     % % stimulus filter
     param.Tinput = 100;
-    % % Plasticity 1/learning rate
-    param.TJ = 1e4;
     
     %% Discretizing the space x
     nx = 64;
@@ -152,7 +150,12 @@ function param = NDF_with_Plasticity_Parameters()
     param.stimLoc = [stimLoc];
     param.stimLoc_theta = [ stimLoc_theta ];
 
-    %% additional parameters for plasticity
+    %% delay-period plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
     param.fM_expr = '@(x,dx) ( (1) .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
+    % % Plasticity 1/learning rate
+    param.TJ_delay = 1e4;
+
+    %% homeostatic plasticity
+    param.TJ_homeostasis

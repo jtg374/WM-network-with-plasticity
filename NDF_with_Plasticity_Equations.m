@@ -47,10 +47,11 @@ dSei= 1./param.TEI.*(-SEI + RI);
 dSii= 1./param.TII.*(-SII + RI);
 % % Plasticity
 K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
+TJ = param.TJ_delay; % 1/learning rate
 if t>TStimOff
     %
     fM = param.fM;
-    dMEE= -1/param.TJ * fM(RE,dRe_);
+    dMEE= -1/TJ * fM(RE,dRe_);
     %
 else 
     dMEE=zeros(N,N);
