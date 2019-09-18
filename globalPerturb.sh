@@ -5,6 +5,7 @@
 #SBATCH -o result.%J.out
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jtg374@nyu.edu
+#SBATCH -t 0-4:00
 
 module purge
 module load matlab/2018a

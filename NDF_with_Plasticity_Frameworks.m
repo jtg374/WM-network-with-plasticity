@@ -48,7 +48,8 @@ clear Rt;
 clear y
 
 %% save results
-datapath = ['../../Data/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,yyyyddmm_HH_MM)];
+datapath = ['../../Data/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,'_yyyyddmm_HH_MM')];
+mkdir(datapath)
 save([datapath,'/param.mat'],'-struct','param');
 save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
 MEE_final = MEEt(:,:,end);
