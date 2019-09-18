@@ -10,59 +10,86 @@ MIE = param.MIE;
 MII = param.MII;
 
 %% load timing
-dt_store = param.dt_store;
+dt_store_delay = param.dt_store_delay;
+dt_store_homeo = param.dt_store_homeo;
 nTrial = param.nTrial;
+nTrialBatch = param.nTrialBatch;
+nBatch = param.nBatch;
 TrialOn = param.TrialOn;
 TStimOn   = param.TStimOn;
 TStimOff  = param.TStimOff;
 TrialOff = param.TrialOff;
+TBatchOn = param.TBatchOn;
+THomeoOn = param.THomeoOn;
+TBatchOff = param.TBatchOff;
 
 %% additional parameters
 nx = param.N;
 
 %% Solving ODE equations
-t = 0:dt_store:TrialOff(end);
+% allocate time points
+t_batch = [ 0:dt_store_delay:THomeoOn(1)-dt_store_delay, THomeoOn(1):dt_store_homeo:TBatchOff(1)-dt_store_homeo];
+nt_batch = length(t_batch);
+t = repmat(t_batch,1,nBatch) + repelem(TBatchOn,nt_batch);
+t = [t, TBatchOff(end)];
 nt = length(t);
+% allocate variable storage
 y = zeros(nt,6*nx);
 MEEt = zeros(nx,nx,nTrial+1);MEEt(:,:,1) = MEE;
 for iTrial = 1:nTrial
+    % initial value
     disp(['Trial ',num2str(iTrial)])
     y0 = [ones(6*nx,1);  % 6*N state variables
         reshape(MEEt(:,:,iTrial),nx*nx,1) % E to E Connection Strength
     ]; 
     options = odeset('RelTol',1e-3,'AbsTol',1e-5);
-    tIndex = floor(TrialOn(iTrial)/dt_store):floor(TrialOff(iTrial)/dt_store);
+    tEval = TrialOn(iTrial):dt_store_delay:TrialOff(iTrial);
+    tIndex = find(t==TrialOn(iTrial)):find(t==TrialOff(iTrial));
     [t1,y1] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
-        TrialOn(iTrial):dt_store:TrialOff(iTrial),y0,options);
-    y(tIndex+1,:) = y1(:,1:6*nx);
+        tEval,y0,options);
+    y(tIndex,:) = y1(:,1:6*nx);
     MEE_last = y1(end,nx*6+1:end);
     MEEt(:,:,iTrial+1) = reshape(MEE_last,nx,nx);
+    if mod(iTrial,nTrialBatch)==0
+        iBatch = floor(iTrial/nTrialBatch);
+        disp(['Homeostasis period ',num2str(iBatch)]);
+        y0 = [ones(6*nx,1);  % 6*N state variables
+            reshape(MEEt(:,:,iTrial+1),nx*nx,1) % E to E Connection Strength
+        ]; 
+        tEval = THomeoOn(iBatch):dt_store_homeo:TBatchOff(iBatch);
+        tIndex = find(t==THomeoOn(iBatch)):find(t==TBatchOff(iBatch));
+        [t1,y1] = ode23(@(t,y0) NDF_with_Homeostasis_Equations(t,y0,param),...
+            tEval,y0,options);
+        y(tIndex,:) = y1(:,1:6*nx);
+        MEE_last = y1(end,6*nx+1:end);
+        MEEt(:,:,iTrial+1) = reshape(MEE_last,nx,nx);
+    end
 end
 Rt = reshape(y,nt,nx,6);
 RE = Rt(:,:,1)';RI = Rt(:,:,2)';
 
 %% Figures
-close all
+% close all
 
 
 datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
 mkdir(datapath)
 
 % 
-x = param.x;
-h1=figure(1);
-plot(t(t<=param.TrialOff(1)),RE(x==0,t<=param.TrialOff(1)));
-xlabel('time (ms)')
-ylabel('activity')
+% x = param.x;
+% h1=figure(1);
+% plot(t(t<=param.TrialOff(1)),RE(x==0,t<=param.TrialOff(1)));
+% xlabel('time (ms)')
+% ylabel('activity')
 
-h2=figure(2); %imagesc([RE RE1])
-subplot(2,1,1);imagesc(RE(:,(t<=param.TrialOff(10))));title('first 10 trials')
-ylabel('position (80\theta / 2\pi)','FontSize',10)
-subplot(2,1,2);imagesc(RE(:,(t>param.TrialOn(end-9))));title('last 10 trials, last one without plasticity')
-ylabel('position (80\theta / 2\pi)','FontSize',10)
-xlabel('Time (a.u.)','FontSize',14)
-saveas(h2,[datapath,'/2.fig'])
-saveas(h2,[datapath,'/2.jpg'])
+% h2=figure(2); %imagesc([RE RE1])
+% subplot(2,1,1);imagesc(RE(:,(t<=param.TrialOff(10))));title('first 10 trials')
+% ylabel('position (80\theta / 2\pi)','FontSize',10)
+% subplot(2,1,2);imagesc(RE(:,(t>param.TrialOn(end-9))));title('last 10 trials, last one without plasticity')
+% ylabel('position (80\theta / 2\pi)','FontSize',10)
+% xlabel('Time (a.u.)','FontSize',14)
+% saveas(h2,[datapath,'/2.fig'])
+% saveas(h2,[datapath,'/2.jpg'])
 
 % x = param.x;
 % h7=figure(7);hold on;
@@ -84,7 +111,7 @@ saveas(h2,[datapath,'/2.jpg'])
 
 % figure(3);hold on
 % i = round(1*pi/dx)+1;
-% plot(0:dt_store:Tmax,RE(i,:),'Color',color,'LineWidth',1)
+% plot(0:dt_store_delay:Tmax,RE(i,:),'Color',color,'LineWidth',1)
 % title('cell at \theta = 0')
 % xlabel('Time (s)');ylabel('Firing Rate (Hz)','FontSize',14)
 % set(gca,'Xtick',Tinit(21:20:length(Tinit)),'FontSize',14)
@@ -97,7 +124,7 @@ saveas(h2,[datapath,'/2.jpg'])
 % % firing rate of cell at \theta = \pi
 % figure(2);hold on
 % i = 1;
-% plot(0:dt_store:Tmax,RE(i,:),'Color',color,'LineWidth',1)
+% plot(0:dt_store_delay:Tmax,RE(i,:),'Color',color,'LineWidth',1)
 % title('cell at \theta = \pi')
 % xlabel('Time (s)');ylabel('Firing Rate (Hz)','FontSize',14)
 % set(gca,'Xtick',Tinit(21:20:length(Tinit)),'FontSize',14)
@@ -109,7 +136,7 @@ saveas(h2,[datapath,'/2.jpg'])
 % % 
 % % % % % evolution of determinent
 % % % figure(11);hold on
-% % % plot(0:dt_store:Tmax,eigdet,'Color',color,'LineWidth',1)
+% % % plot(0:dt_store_delay:Tmax,eigdet,'Color',color,'LineWidth',1)
 % % % xlabel('Time (s)');ylabel('determinent of A','FontSize',14)
 % % % set(gca,'Xtick',Tinit(21:20:length(Tinit)),'FontSize',14)
 % % % set(gca,'XTickLabel',(20:20:length(Tinit)-1)*(Tstim+Tmemory+Tforget)/1000)
@@ -145,8 +172,8 @@ saveas(h2,[datapath,'/2.jpg'])
 % % % % Spatial pattern of activity at every 1 s
 % % figure(7);hold on
 % % for l = 0:round(Tmemory/1000)
-% %     plot(x,RE(:,(Tinit(end-1)+1000*l)/dt_store),'Color',color,'LineWidth',0.5)
-% %     plot(x(index),RE(index,(Tinit(end-1)+1000*l)/dt_store),'Color',color,'LineWidth',0.5,'Marker','o','MarkerSize',10);
+% %     plot(x,RE(:,(Tinit(end-1)+1000*l)/dt_store_delay),'Color',color,'LineWidth',0.5)
+% %     plot(x(index),RE(index,(Tinit(end-1)+1000*l)/dt_store_delay),'Color',color,'LineWidth',0.5,'Marker','o','MarkerSize',10);
 % % end
 % % xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
 % % set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
@@ -157,8 +184,8 @@ saveas(h2,[datapath,'/2.jpg'])
 % % ylim([0 120])
 % % 
 % % l = 3;
-% % xdata = (round((Tinit(end-1)+Tstim+500)):dt_store:round(Tmax))';
-% % ydata = RE(:,(Tinit(end-1)+1000*l)/dt_store)';
+% % xdata = (round((Tinit(end-1)+Tstim+500)):dt_store_delay:round(Tmax))';
+% % ydata = RE(:,(Tinit(end-1)+1000*l)/dt_store_delay)';
 % % myfun = @(p,xdata) p(1)*exp(-(x-p(2)).^2/p(3))+p(4);
 % % options=optimset('Display','off');
 % % [p,resnorm] = lsqcurvefit(myfun,[1;0;1;10],xdata,ydata,[],[],options);
@@ -167,7 +194,7 @@ saveas(h2,[datapath,'/2.jpg'])
 % % % kmax = 11;
 % % % for i = 1:kmax;
 % % % %     coeff_test(i) = dx/pi*sum(RE(:,Tinit+1000*l).*cos((i-1)*x)');
-% % %     coeff_test(i) = dx/pi*sum(RE(:,(Tinit(end-1)+1000*l)/dt_store).*cos((i-1)*x)');
+% % %     coeff_test(i) = dx/pi*sum(RE(:,(Tinit(end-1)+1000*l)/dt_store_delay).*cos((i-1)*x)');
 % % % end
 % % % k = 2;
 % % % coeff_test(k+1)/coeff_test(k+2)
@@ -196,7 +223,7 @@ saveas(h2,[datapath,'/2.jpg'])
 % % % % 
 % % l = 3;
 % % % T = 1000*l+Tinit+Tstim;
-% % T = 1000*l+Tinit(end-1)+Tstim; T = T/dt_store;
+% % T = 1000*l+Tinit(end-1)+Tstim; T = T/dt_store_delay;
 % % figure(9);plot(x,(RE(:,T)-min(RE(:,T)))/(max(RE(:,T))-min(RE(:,T))),'b','LineWidth',0.5);
 % % xdata = x;
 % % ydata = RE(:,end)';

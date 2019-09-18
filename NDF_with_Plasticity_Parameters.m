@@ -67,15 +67,15 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.qE = @(x) 7*((0.2*(x-1)+0.5).*(x<=1) + (2*(x-1)+0.5).*(x>1).*(x<=2) + (1*(x-2)+2.5).*(x>2).*(x<=14) + 14.5.*(x>14));
 %     param.qI = @(x) x; 
     %% Perturbations
-    a = .97;
+    a = .65;
     % %sharp local perturbation 
-    index_x = 0:dx:pi/8;
-    index = floor((index_x+pi)/dx)+1;
-    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'local-rowwise(postsyn)';
-    param.perturbation_strength = a;    
+    % index_x = 0:dx:pi/8;
+    % index = floor((index_x+pi)/dx)+1;
+    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % param.perturbation_type = 'local-rowwise(postsyn)';
+    % param.perturbation_strength = a;    
 %     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
 %     param.MEE = MEE;
 %     param.MEE_unperturbed = MEE0;
@@ -94,11 +94,11 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.perturbation_strength = a;    
 %     param.perturbation_index = index_x;
 % % global perturbation
-%     MEE0 = MEE; MEE = MEE*a;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'Global';
-%     param.perturbation_strength = a;
+    MEE0 = MEE; MEE = MEE*a;
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'Global';
+    param.perturbation_strength = a;
 % % random perturbation
 %     perturbation = 10.^(randn(nx)/1000);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
@@ -121,33 +121,44 @@ function param = NDF_with_Plasticity_Parameters()
     
     %% simulation timing in milisecond
 
-    T_on = 1000; %ms
-    Tstim = 500;
-    Tmemory = 4500;
+    T_on = 1000; % time between initialization and stimulus onset
+    Tstim = 500; % stimulus presentation duration
+    Tmemory = 4500; % delay duration
     
-    iter=1e4; % number of training trails
     nTrialBatch = 1e2; % number of trials after which to run a homeostasis training
+    nBatch = 1e2; 
+    nTrial=nTrialBatch*nBatch; % number of training trails
 
-    THomeo = 
+    THomeo = 1e6; % baseline duration to run homeostasis plasticity
 
     tTrial = T_on+Tstim+Tmemory;
+    tBatch = tTrial*nTrialBatch + THomeo; 
 
-    TrialOn = 0:tTrial:tTrial*(iter-1);
+    TrialOn_batch = 0:tTrial:tTrial*(nTrialBatch-1);
+    
+    TBatchOn = 0:tBatch:tBatch*(nBatch-1);
+
+    TrialOn = repmat(TrialOn_batch,1,nBatch) + repelem(TBatchOn,nTrialBatch);
     TStimOn = TrialOn + T_on;
     TStimOff = TStimOn + Tstim;
     TrialOff = TStimOff + Tmemory;
-    
-    param.nTrial = iter; 
-    param.nTrialBatch = 
+
+    param.nTrial = nTrial; 
+    param.nTrialBatch = nTrialBatch; 
+    param.nBatch = nBatch;
     param.TrialOn = TrialOn;
     param.TrialOff = TrialOff;
     param.TStimOn   = TStimOn;
     param.TStimOff  = [TStimOff];
+    param.TBatchOn = TBatchOn;
+    param.THomeoOn = TBatchOn + tTrial*nTrialBatch;;
+    param.TBatchOff = TBatchOn+tBatch;
     
-    param.dt_store = 50;
+    param.dt_store_delay = 50;
+    param.dt_store_homeo = 1e3;
 
     %% randomize stimlus location
-    stimLoc = randi(nx,iter,1)-nx/2; % in training period
+    stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
     stimLoc_theta = stimLoc/nx*2*pi;
 %     stimLoc_test = 0; 
 
@@ -163,3 +174,4 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% homeostatic plasticity
     param.TJ_homeostasis = 1e6;
+    param.RE_target = 1; % determine from parameters above for now...
