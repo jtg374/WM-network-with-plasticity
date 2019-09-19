@@ -28,7 +28,9 @@ dSei= 1./param.TEI.*(-SEI + RI);
 dSii= 1./param.TII.*(-SII + RI);
 % % Plasticity
 TJ = param.TJ_homeostasis; % 1/learning rate
-dMEE = 1/TJ * diag(param.RE_target - RE) * MEE;
+diff=param.RE_target - RE;
+diff(diff>param.RE_target*0.8) = param.RE_target*0.8;
+dMEE = 1/TJ * diag(diff) * MEE;
 
 % pack variable derivatives
 dy=[dRe;dRi;dSee;dSie;dSei;dSii;reshape(dMEE,N*N,1)];  
