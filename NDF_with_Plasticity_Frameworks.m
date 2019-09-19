@@ -72,7 +72,7 @@ RE = Rt(:,:,1)';RI = Rt(:,:,2)';
 % close all
 
 
-datapath = ['../../Data/WM_Plasticity/PlusHomeostasis_' datestr(now,'yymmdd_HH_MM')];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/PlusHomeostasis_' datestr(now,'yymmdd_HH_MM')];
 mkdir(datapath)
 
 % 
