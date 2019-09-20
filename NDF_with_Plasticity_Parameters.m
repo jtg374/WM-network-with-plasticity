@@ -112,12 +112,10 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% External Input
     JEO = 2*J;
-    IEO_init = 3.5*(exp(-(x/(pi/4)).^2)');
+    IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;
-    param.IEc = 15*ones(nx,1); 
-    param.IIc = 0;
     
     %% simulation timing in milisecond
 
