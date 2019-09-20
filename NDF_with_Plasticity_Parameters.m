@@ -51,15 +51,15 @@ function param = NDF_with_Plasticity_Parameters()
     param.MII = MII;
 
     %% Transfer Function
-    NE = 2;
+    NE = 3;
     thE = 10;
-    sigE = 40;
+    sigE = 100;
     maxfE = 100;
     qE = @(x) maxfE*(x-thE).^NE./(sigE^NE+(x-thE).^NE).*(x>thE);
     
-    NI = 2;
+    NI = 3;
     thI = 10;
-    sigI = 40;
+    sigI = 100;
     maxfI = 100;
     qI = @(x) maxfI*(x-thI).^NI./(sigI^NI+(x-thI).^NI).*(x>thI);
 %     param.qE = qE;
