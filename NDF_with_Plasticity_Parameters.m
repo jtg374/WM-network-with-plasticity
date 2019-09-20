@@ -125,11 +125,11 @@ function param = NDF_with_Plasticity_Parameters()
     Tstim = 500; % stimulus presentation duration
     Tmemory = 4500; % delay duration
     
-    nTrialBatch = 1e2; % number of trials after which to run a homeostasis training
-    nBatch = 1e2; 
+    nTrialBatch = 12; % number of trials after which to run a homeostasis training
+    nBatch = 1e3; 
     nTrial=nTrialBatch*nBatch; % number of training trails
 
-    THomeo = 1e6; % baseline duration to run homeostasis plasticity
+    THomeo = 1e5; % baseline duration to run homeostasis plasticity
 
     tTrial = T_on+Tstim+Tmemory;
     tBatch = tTrial*nTrialBatch + THomeo; 
