@@ -124,7 +124,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = Tstim*2;
     
-    iter=400; % number of training trails
+    iter=20; % number of training trails
     
     Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
     Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
@@ -153,5 +153,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( ((x/20).^(2*0.5)) .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( (0 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
