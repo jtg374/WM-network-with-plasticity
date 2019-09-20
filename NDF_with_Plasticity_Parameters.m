@@ -130,7 +130,7 @@ function param = NDF_with_Plasticity_Parameters()
 
     TStimOn = T_on:tTrial:tMax;
 
-    param.nTrialTrain = nTrial;
+    param.nTrial = nTrial;
     param.TStimOn   = TStimOn;
     param.TStimOff  = TStimOn+Tstim;
     param.TDelayOff = TStimOn+Tstim+Tmemory;
@@ -142,10 +142,9 @@ function param = NDF_with_Plasticity_Parameters()
     %% randomize stimlus location
     stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
     stimLoc_theta = stimLoc/nx*2*pi;
-    stimLoc_test = 0; 
 
-    param.stimLoc = [stimLoc; stimLoc_test];
-    param.stimLoc_theta = [stimLoc_theta; stimLoc_test/nx*2*pi];
+    param.stimLoc = stimLoc;
+    % param.stimLoc_theta = stimLoc_theta;
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn

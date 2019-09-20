@@ -56,30 +56,32 @@ mkdir(datapath)
 % 
 
 h2=figure(2); %imagesc([RE RE1])
-subplot(2,1,1);imagesc(RE(:,(t<=param.TDelayOff(10))));title('first 10 trials')
+tIndex = t>=TStimOn(1) & t<TDelayOff(10);
+subplot(2,1,1);imagesc(RE(:,tIndex));title('first 10 trials')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
-subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))));title('last 10 trials, last one without plasticity')
+tIndex = t>=param.TStimOn(end-9) & t<TDelayOff(end);
+subplot(2,1,2);imagesc(RE(:,tIndex));title('last 10 trials')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
 xlabel('Time (a.u.)','FontSize',14)
 saveas(h2,[datapath,'/2.fig'])
 saveas(h2,[datapath,'/2.jpg'])
 
-x = param.x;
-h7=figure(7);hold on;
-firstTestDelay = t>=TStimOff(param.nTrialTrain+1) & t<TDelayOff(param.nTrialTrain+1) ;
-colors = copper(sum(firstTestDelay));
-set(gca,'ColorOrder',colors)
-plot(x,RE(:,firstTestDelay)','LineWidth',0.5)
-title('Evolution of activity pateern at delay of last trial')
-xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
-set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
-set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
-xlim([-pi pi]);
-set(gca,'Ytick',0:50:100,'FontSize',14)
-ylim([0 120])
-hold off
-saveas(h7,[datapath,'/7.fig'])
-saveas(h7,[datapath,'/7.jpg'])
+% x = param.x;
+% h7=figure(7);hold on;
+% firstTestDelay = t>=TStimOff(param.nTrial+1) & t<TDelayOff(param.nTrial+1) ;
+% colors = copper(sum(firstTestDelay));
+% set(gca,'ColorOrder',colors)
+% plot(x,RE(:,firstTestDelay)','LineWidth',0.5)
+% title('Evolution of activity pateern at delay of last trial')
+% xlabel('\theta','FontSize',14);ylabel('Firing Rate (Hz)','FontSize',14)
+% set(gca,'Xtick',pi*(-1:0.5:1),'FontSize',14)
+% set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+% xlim([-pi pi]);
+% set(gca,'Ytick',0:50:100,'FontSize',14)
+% ylim([0 120])
+% hold off
+% saveas(h7,[datapath,'/7.fig'])
+% saveas(h7,[datapath,'/7.jpg'])
 
 
 % figure(3);hold on

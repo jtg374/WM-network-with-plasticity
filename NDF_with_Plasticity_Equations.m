@@ -16,7 +16,6 @@ TStimOff  = param.TStimOff;
 TDelayOff = param.TDelayOff;
 TForgetOff= param.TForgetOff;
 nTrial    = sum(t>=TStimOn);
-isTraining = nTrial<=param.nTrialTrain;
 
 % set stimulus location
 shift=0;
@@ -41,7 +40,7 @@ dIt = 1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
 dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
 % % Plasticity
 K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
-if isTraining  && any( (t>TStimOff).* (t<TDelayOff) )
+if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM = param.fM;
     dMEE= -1/param.TJ * fM(RE,dRe_);
