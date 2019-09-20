@@ -122,29 +122,25 @@ function param = NDF_with_Plasticity_Parameters()
     T_on = 500; %ms
     Tstim = 500;
     Tmemory = 3000;
-    Tforget = Tstim*2;
+    Tforget = 1000;
     
-    iter=20; % number of training trails
-    
-    Tmax = T_on+iter*(Tstim+Tmemory+Tforget)-Tforget; % end of training
-    Tinit = T_on:(Tstim+Tmemory+Tforget):Tmax; % Times of stimuli onset (training peroid) 
+    nTrial=20; % number of trails
+    tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
+    tMax = nTrial*tTrial;
 
-    Tinter = 6000;  % memory time in test period
-    Tmax1 = Tmax+Tforget; % Stimilus onset time in test period    
-    Tmax2 = Tmax1+Tstim+Tinter; 
-    
-    param.nTrialTrain = iter;
-    param.nTrialTest = 1;
-    param.TStimOn   = [Tinit, Tmax1];
-    param.TStimOff  = [Tinit+Tstim, Tmax1+Tstim];
-    param.TDelayOff = [Tinit+Tstim+Tmemory, Tmax2];
-    param.TForgetOff= param.TStimOn(2:end);
-    param.Tmax = Tmax2;
+    TStimOn = T_on:tTrial:tMax;
+
+    param.nTrialTrain = nTrial;
+    param.TStimOn   = TStimOn;
+    param.TStimOff  = TStimOn+Tstim;
+    param.TDelayOff = TStimOn+Tstim+Tmemory;
+    param.TForgetOff= TStimOn+Tstim+Tmemory+Tforget;
+    param.Tmax = tMax;
 
     param.dt_store = 50;
 
     %% randomize stimlus location
-    stimLoc = randi(nx,iter,1)-nx/2; % in training period
+    stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
     stimLoc_theta = stimLoc/nx*2*pi;
     stimLoc_test = 0; 
 
@@ -153,5 +149,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( (0 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( 0 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
