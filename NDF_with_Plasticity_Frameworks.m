@@ -50,21 +50,21 @@ clear y
 close all
 
 
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/xsrule_plus_homeo_' datestr(now,'yymmdd_HH_MM')];
 mkdir(datapath)
 
 % 
 
-% h2=figure(2); %imagesc([RE RE1])
-% tIndex = t>=TStimOn(1) & t<TDelayOff(10);
-% subplot(2,1,1);imagesc(RE(:,tIndex));title('first 10 trials')
-% ylabel('position (80\theta / 2\pi)','FontSize',10)
-% tIndex = t>=param.TStimOn(end-9) & t<TDelayOff(end);
-% subplot(2,1,2);imagesc(RE(:,tIndex));title('last 10 trials')
-% ylabel('position (80\theta / 2\pi)','FontSize',10)
-% xlabel('Time (a.u.)','FontSize',14)
-% saveas(h2,[datapath,'/2.fig'])
-% saveas(h2,[datapath,'/2.jpg'])
+h2=figure(2); %imagesc([RE RE1])
+tIndex = t>=TStimOn(1) & t<TDelayOff(10);
+subplot(2,1,1);imagesc(RE(:,tIndex));title('first 10 trials')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
+tIndex = t>=param.TStimOn(end-9) & t<TDelayOff(end);
+subplot(2,1,2);imagesc(RE(:,tIndex));title('last 10 trials')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
+xlabel('Time (a.u.)','FontSize',14)
+saveas(h2,[datapath,'/2.fig'])
+saveas(h2,[datapath,'/2.jpg'])
 
 % x = param.x;
 % h7=figure(7);hold on;
