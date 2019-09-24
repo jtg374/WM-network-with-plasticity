@@ -149,5 +149,5 @@ function param = NDF_with_Plasticity_Parameters()
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
     param.RE_target = 20;
-    param.fM_expr = '@(x,dx,M,x_ref) dx * x'' + 1e-3*diag(x_ref-x)*M ';
+    param.fM_expr = '@(x,dx,M,x_ref) -dx * x'' + 1e-3*diag(x_ref-x)*M ';
     param.fM = eval(param.fM_expr);

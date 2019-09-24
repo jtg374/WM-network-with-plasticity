@@ -43,9 +43,10 @@ K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 RE_target = param.RE_target;
 fM = param.fM;
 if any( (t>TStimOff).* (t<TDelayOff) )
-    dMEE= -1/param.TJ * fM(RE,dRe_,MEE,RE_target);
+    dMEE= 1/param.TJ * fM(RE,dRe_,MEE,RE_target);
 else 
-    dMEE= -1/param.TJ * fM(RE,zeros(N,1),MEE,RE_target); % homeostatic rule only
+    dMEE= 1/param.TJ * fM(RE,zeros(N,1),MEE,RE_target); % homeostatic rule only
+%     dMEE = zeros(size(MEE));
 end
 
 % pack variable derivatives
