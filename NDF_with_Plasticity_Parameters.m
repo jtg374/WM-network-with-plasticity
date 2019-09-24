@@ -124,7 +124,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=20; % number of trails
+    nTrial=1000; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
