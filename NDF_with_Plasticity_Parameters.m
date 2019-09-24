@@ -69,13 +69,13 @@ function param = NDF_with_Plasticity_Parameters()
     %% Perturbations
     a = .97;
     % %sharp local perturbation 
-    % index_x = 0:dx:pi/8;
-    % index = floor((index_x+pi)/dx)+1;
-    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'local-rowwise(postsyn)';
-    % param.perturbation_strength = a;    
+    index_x = 0:dx:pi/8;
+    index = floor((index_x+pi)/dx)+1;
+    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'local-rowwise(postsyn)';
+    param.perturbation_strength = a;    
 %     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
 %     param.MEE = MEE;
 %     param.MEE_unperturbed = MEE0;
@@ -148,5 +148,6 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( 0 .* dx ) * x'' ';
+    param.RE_target = 20;
+    param.fM_expr = '@(x,dx,M,x_ref) dx * x'' + 1e-3*diag(x_ref-x)*M ';
     param.fM = eval(param.fM_expr);
