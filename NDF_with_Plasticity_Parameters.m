@@ -67,7 +67,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = .90;
+    a = .65;
     % %sharp local perturbation 
 %    index_x = 0:dx:pi/8;
 %    index = floor((index_x+pi)/dx)+1;
@@ -124,7 +124,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=2000; % number of trails
+    nTrial=9000; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -149,6 +149,6 @@ function param = NDF_with_Plasticity_Parameters()
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
     param.RE_target = 20;
-    param.fM_expr = '@(x,dx,M,x_ref) -0*dx * x'' + 2e-4*diag(x_ref-x)*M ';
+    param.fM_expr = '@(x,dx,M,x_ref) -1*dx * x'' + 2e-4*diag(x_ref-x)*M ';
     % x, dx order of 20. M order of 100;
     param.fM = eval(param.fM_expr);
