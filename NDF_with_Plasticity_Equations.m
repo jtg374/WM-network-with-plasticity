@@ -45,8 +45,8 @@ fM = param.fM;
 if any( (t>TStimOff).* (t<TDelayOff) )
     dMEE= 1/param.TJ * fM(RE,dRe_,MEE,RE_target);
 else 
-    dMEE= 1/param.TJ * fM(RE,zeros(N,1),MEE,RE_target); % homeostatic rule only
-%     dMEE = zeros(size(MEE));
+%    dMEE= 1/param.TJ * fM(RE,zeros(N,1),MEE,RE_target); % homeostatic rule only
+     dMEE = zeros(size(MEE));
 end
 
 % pack variable derivatives
