@@ -11,7 +11,7 @@ function param = NDF_with_Plasticity_Parameters(a,nTrialTrain)
     % % stimulus filter
     param.Tinput = 100;
     % % Plasticity 1/learning rate
-    param.TJ = 2e5;
+    param.TJ = 1e4;
     
     %% Discretizing the space x
     nx = 64;

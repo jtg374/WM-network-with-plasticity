@@ -53,3 +53,14 @@ save([datapath,'/param.mat'],'-struct','param');
 save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
 MEE_final = MEEt(:,:,end);
 %save(['../../Data/WM_Plasticity/XSRule/FinalMEE',num2str(perturbation*100),'.mat'],'perturbation','MEE_final');
+
+%% plot
+h2=figure(2); %imagesc([RE RE1])
+subplot(2,1,1);imagesc(RE(:,(t<=param.TDelayOff(10))),[0 50]);title('first 10 trials')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
+colorbar('southoutside')
+subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))),[0 50]);title('last 10 trials, last one without plasticity')
+ylabel('position (80\theta / 2\pi)','FontSize',10)
+xlabel('Time (a.u.)','FontSize',14)
+saveas(h2,[datapath,'/2.fig'])
+saveas(h2,[datapath,'/2.jpg'])
