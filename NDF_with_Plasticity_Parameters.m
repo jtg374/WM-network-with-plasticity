@@ -67,15 +67,15 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = .97;
+    a = 1.10;
     % %sharp local perturbation 
-    % index_x = 0:dx:pi/8;
-    % index = floor((index_x+pi)/dx)+1;
-    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'local-rowwise(postsyn)';
-    % param.perturbation_strength = a;    
+    index_x = 0:dx:pi/8;
+    index = floor((index_x+pi)/dx)+1;
+    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'local-rowwise(postsyn)';
+    param.perturbation_strength = a;    
 %     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
 %     param.MEE = MEE;
 %     param.MEE_unperturbed = MEE0;
@@ -93,18 +93,18 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.perturbation_type = 'local-rowwise(postsyn)';
 %     param.perturbation_strength = a;    
 %     param.perturbation_index = index_x;
-% % % global perturbation
-%     MEE0 = MEE; MEE = MEE*a;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'Global';
-%     param.perturbation_strength = a;
+% % global perturbation
+    % MEE0 = MEE; MEE = MEE*a;
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % param.perturbation_type = 'Global';
+    % param.perturbation_strength = a;
 % random perturbation
-    a = 0.01;
-    param.perturbation_strength = a;
-    perturbation = 10.^(randn(nx)*a);
-    MEE0 = MEE; MEE = MEE.*perturbation;
-    param.perturbation_type = 'MEE-random-lognormal';
+%     a = 0.01;
+%     param.perturbation_strength = a;
+%     perturbation = 10.^(randn(nx)*a);
+%     MEE0 = MEE; MEE = MEE.*perturbation;
+%     param.perturbation_type = 'MEE-random-lognormal';
 %     a = 0.03;
 %     param.perturbation_strength = a;
 %     perturbation = randn(nx)*a+1;
@@ -115,9 +115,10 @@ function param = NDF_with_Plasticity_Parameters()
 %     perturbation = rand(nx)*(r(2)-r(1))+r(1);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
 %     param.perturbation_type = 'MEE-random-uniform';
-    param.perturbation = perturbation;
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
+%
+%     param.perturbation = perturbation;
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
@@ -155,7 +156,7 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% randomize stimlus location
     stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
-%     stimLoc = 0:floor(nx/nTrial):nx-1;
+    % stimLoc = 0:floor(nx/nTrial):nx-1;
     stimLoc_theta = stimLoc/nx*2*pi;
 
     param.stimLoc = stimLoc;
