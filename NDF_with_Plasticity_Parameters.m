@@ -134,7 +134,7 @@ param.MII = MII;param.MII_unperturbed = MII0;
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=10; % number of trails
+    nTrial=500; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -151,7 +151,7 @@ param.MII = MII;param.MII_unperturbed = MII0;
 
     %% randomize stimlus location
     stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
-    stimLoc = 0:floor(nx/nTrial):nx-1;
+%     stimLoc = 0:floor(nx/nTrial):nx-1;
     stimLoc_theta = stimLoc/nx*2*pi;
 
     param.stimLoc = stimLoc;
@@ -159,7 +159,7 @@ param.MII = MII;param.MII_unperturbed = MII0;
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( 0 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( 1 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
 
     param.fMEE = param.fM;

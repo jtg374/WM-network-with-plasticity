@@ -39,7 +39,7 @@ disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 nt = length(t);
 Mt = y(:,nx*6+3:end);
 Mt = Mt(TDelayOff/dt_store,:);
-Mt = reshape(Mt,param.nTrial,nx,nx,4)
+Mt = reshape(Mt,param.nTrial,nx,nx,4);
 Mt = permute(Mt,[2 3 1 4]); % put time on 3rd dimention
 MEEt = Mt(:,:,:,1);MEIt = Mt(:,:,:,2);MIEt = Mt(:,:,:,3);MIIt = Mt(:,:,:,4);
 Rt = y(:,3:nx*6+2);Rt = reshape(Rt,nt,nx,6);
