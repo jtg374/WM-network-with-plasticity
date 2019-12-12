@@ -17,7 +17,10 @@ nx = param.N;
 y0 = [0;              % Stimlus Current Strength
       0;              % Wipe Current Strength
       zeros(6*nx,1);  % 6*N state variables
-      reshape(MEE,nx*nx,1) % E to E Connection Strength
+      reshape(MEE,nx*nx,1); % E to E Connection Strength
+      reshape(MEI,nx*nx,1); 
+      reshape(MIE,nx*nx,1); 
+      reshape(MII,nx*nx,1)
       ]; 
 %% load timing
 TStimOn   = param.TStimOn;
@@ -34,9 +37,11 @@ disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 
 nt = length(t);
-Mt = y(:,nx*6+3:end);MEEt = reshape(Mt,nt,nx,nx);
-MEEt = MEEt(TDelayOff/dt_store,:,:);
-MEEt = permute(MEEt,[2 3 1]); % put time on 3rd dimention
+Mt = y(:,nx*6+3:end);
+Mt = Mt(TDelayOff/dt_store,:);
+Mt = reshape(Mt,param.nTrial,nx,nx,4)
+Mt = permute(Mt,[2 3 1 4]); % put time on 3rd dimention
+MEEt = Mt(:,:,:,1);MEIt = Mt(:,:,:,2);MIEt = Mt(:,:,:,3);MIIt = Mt(:,:,:,4);
 Rt = y(:,3:nx*6+2);Rt = reshape(Rt,nt,nx,6);
 RE = Rt(:,:,1)';RI = Rt(:,:,2)';SEE = Rt(:,:,3)';SIE = Rt(:,:,4)';SEI = Rt(:,:,5)';SII = Rt(:,:,6)'; % put time on 2nd dimention
 clear Rt;
@@ -243,4 +248,4 @@ saveas(h2,[datapath,'/2.jpg'])
 % % 
 %% save results
 save([datapath,'/param.mat'],'-struct','param');
-save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
+save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt','MEIt','MIEt','MIIt');
