@@ -100,25 +100,20 @@ function param = NDF_with_Plasticity_Parameters()
     % param.perturbation_type = 'Global';
     % param.perturbation_strength = a;
 % random perturbation
-%     a = 0.01;
-%     param.perturbation_strength = a;
-%     perturbation = 10.^(randn(nx)*a);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.perturbation_type = 'MEE-random-lognormal';
-%     a = 0.03;
-%     param.perturbation_strength = a;
-%     perturbation = randn(nx)*a+1;
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.perturbation_type = 'MEE-random-normal';
-%     r = [0.9 1.1]; 
-%     param.perturbation_range = r;
-%     perturbation = rand(nx)*(r(2)-r(1))+r(1);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.perturbation_type = 'MEE-random-uniform';
+a = 0.02;
+param.perturbation_strength = a;
+perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMEE = perturbation; MEE0 = MEE; MEE = MEE.*perturbation;
+perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMEI = perturbation; MEI0 = MEI; MEI = MEI.*perturbation;
+perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMIE = perturbation; MIE0 = MIE; MIE = MIE.*perturbation;
+perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMII = perturbation; MII0 = MII; MII = MII.*perturbation;
+param.perturbation_type = 'all-random-gamma';
 %
-%     param.perturbation = perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
+
+param.MEE = MEE;param.MEE_unperturbed = MEE0;
+param.MEI = MEI;param.MEI_unperturbed = MEI0;
+param.MIE = MIE;param.MIE_unperturbed = MIE0;
+param.MII = MII;param.MII_unperturbed = MII0;
+
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
@@ -139,7 +134,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=500; % number of trails
+    nTrial=10; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -156,7 +151,7 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% randomize stimlus location
     stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
-    % stimLoc = 0:floor(nx/nTrial):nx-1;
+    stimLoc = 0:floor(nx/nTrial):nx-1;
     stimLoc_theta = stimLoc/nx*2*pi;
 
     param.stimLoc = stimLoc;
@@ -164,7 +159,7 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( 1 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( 0 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
 
     param.fMEE = param.fM;
