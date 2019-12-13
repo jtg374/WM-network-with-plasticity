@@ -115,21 +115,34 @@ function param = NDF_with_Plasticity_Parameters()
 %     perturbation = rand(nx)*(r(2)-r(1))+r(1);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
 %     param.perturbation_type = 'MEE-random-uniform';
-    a = 0.03;
-    param.perturbation_strength = a;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    MEE0 = MEE; MEE = MEE.*perturbation;
-    param.perturbation_type = 'MEE-random-gamma';
+    % a = 0.03;
+    % param.perturbation_strength = a;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % MEE0 = MEE; MEE = MEE.*perturbation;
+    % param.perturbation_type = 'MEE-random-gamma';
 %
-    param.perturbation = perturbation;
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
+    % param.perturbation = perturbation;
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
     % param.MEE = MEE;
     % param.MEE_unperturbed = MEE0;
-
+    % % All Perturb
+    a = 0.02;
+    param.perturbation_strength = a;
+    perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMEE = perturbation; MEE0 = MEE; MEE = MEE.*perturbation;
+    perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMEI = perturbation; MEI0 = MEI; MEI = MEI.*perturbation;
+%     perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMIE = perturbation; MIE0 = MIE; MIE = MIE.*perturbation;
+%     perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMII = perturbation; MII0 = MII; MII = MII.*perturbation;
+    param.perturbation_type = 'all-random-gamma';
+    %
+    
+    param.MEE = MEE;param.MEE_unperturbed = MEE0;
+    param.MEI = MEI;param.MEI_unperturbed = MEI0;
+%     param.MIE = MIE;param.MIE_unperturbed = MIE0;
+%     param.MII = MII;param.MII_unperturbed = MII0;
     %% External Input
     JEO = 2*J;
     IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
