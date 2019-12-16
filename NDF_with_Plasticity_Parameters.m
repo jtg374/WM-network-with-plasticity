@@ -109,16 +109,19 @@ perturbation = gamrnd(1/a^2,a^2,nx,nx);param.perturbationMII = perturbation; MII
 param.perturbation_type = 'all-random-gamma';
 %
 
-param.MEE = MEE;param.MEE_unperturbed = MEE0;
-param.MEI = MEI;param.MEI_unperturbed = MEI0;
-param.MIE = MIE;param.MIE_unperturbed = MIE0;
-param.MII = MII;param.MII_unperturbed = MII0;
 
 
-    % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
+
+    % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\191212_15_18_RandomAllPerturbAllPlastic\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
+    % MEI0 = MEI;MEI = previousResult.MEIt(:,:,end);
+    % MIE0 = MIE;MIE = previousResult.MIEt(:,:,end);
+    % MII0 = MII;MII = previousResult.MIIt(:,:,end);
+
+    param.MEE = MEE;param.MEE_unperturbed = MEE0;
+    param.MEI = MEI;param.MEI_unperturbed = MEI0;
+    param.MIE = MIE;param.MIE_unperturbed = MIE0;
+    param.MII = MII;param.MII_unperturbed = MII0;
 
     %% External Input
     JEO = 2*J;
@@ -134,7 +137,7 @@ param.MII = MII;param.MII_unperturbed = MII0;
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=500; % number of trails
+    nTrial=2500; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
