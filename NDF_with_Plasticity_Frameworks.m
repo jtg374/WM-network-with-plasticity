@@ -1,4 +1,4 @@
-function NDF_with_Plasticity_Framework(perturbation,nTrain)
+function NDF_with_Plasticity_Frameworks(perturbation,nTrain)
 %% load parameters
 disp(perturbation)
 param = NDF_with_Plasticity_Parameters(perturbation,nTrain)
@@ -47,7 +47,7 @@ clear Rt;
 clear y
 
 %% save results
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,'_yyyyddmm_HH_MM')];
+datapath = '.';%['/gpfsnyu/scratch/jtg374/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,'_yyyymmdd_HH_MM')];
 mkdir(datapath)
 save([datapath,'/param.mat'],'-struct','param');
 save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
@@ -62,5 +62,4 @@ colorbar('southoutside')
 subplot(2,1,2);imagesc(RE(:,(t>param.TStimOn(end-9))),[0 50]);title('last 10 trials, last one without plasticity')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
 xlabel('Time (a.u.)','FontSize',14)
-saveas(h2,[datapath,'/2.fig'])
 saveas(h2,[datapath,'/2.jpg'])

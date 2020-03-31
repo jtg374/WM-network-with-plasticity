@@ -40,11 +40,11 @@ dSii= 1./param.TII.*(-SII + RI);
 dIt = 1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
 dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
 % % Plasticity
-K=1e3;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
-if isTraining  && any( (t>TStimOff).* (t<TDelayOff) )
+K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
+if isTraining && any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM = param.fM;
-    dMEE= -1/param.TJ * fM(RE,dRe_);
+    dMEE= fM(RE,dRe_);
     %
 else 
     dMEE=zeros(N,N);
