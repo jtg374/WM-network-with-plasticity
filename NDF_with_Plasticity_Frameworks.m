@@ -47,7 +47,7 @@ clear Rt;
 clear y
 
 %% save results
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,'_yyyyddmm_HH_MM')];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/XSRule',num2str(perturbation*100),'GlobalPerturb',datestr(now,'_yyyymmdd_HH_MM')];
 mkdir(datapath)
 save([datapath,'/param.mat'],'-struct','param');
 save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');

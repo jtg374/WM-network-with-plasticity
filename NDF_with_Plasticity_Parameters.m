@@ -10,8 +10,6 @@ function param = NDF_with_Plasticity_Parameters(a,nTrialTrain)
     param.TII = 10;
     % % stimulus filter
     param.Tinput = 100;
-    % % Plasticity 1/learning rate
-    param.TJ = 1e4;
     
     %% Discretizing the space x
     nx = 64;
@@ -67,48 +65,12 @@ function param = NDF_with_Plasticity_Parameters(a,nTrialTrain)
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-%    a = .97;
-%    % %sharp local perturbation 
-%    index_x = 0:dx:pi/8;
-%    index = floor((index_x+pi)/dx)+1;
-%    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-%    param.MEE = MEE;
-%    param.MEE_unperturbed = MEE0;
-%    param.perturbation_type = 'local-rowwise(postsyn)';
-%    param.perturbation_strength = a;    
-%     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'local-colwise(presyn)';
-%     param.perturbation_strength = a;    
-    % % smooth local perturbation
-%     index_x = 0:dx:pi/8;
-%     index = floor((index_x+pi)/dx)+1;
-%     perturbation = 1 - (1-a)*exp(-((x-0.125*pi)/(pi/2)).^2);
-%     param.perturbation = perturbation;
-%     perturbation = repmat(perturbation',1,nx);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'local-rowwise(postsyn)';
-%     param.perturbation_strength = a;    
-%     param.perturbation_index = index_x;
 % % global perturbation
     MEE0 = MEE; MEE = MEE*a;
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
     param.perturbation_type = 'Global';
     param.perturbation_strength = a;
-% % random perturbation
-%     perturbation = 10.^(randn(nx)/1000);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'random';
-    % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
-    % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
 
     %% External Input
     JEO = 2*J;
@@ -153,5 +115,5 @@ function param = NDF_with_Plasticity_Parameters(a,nTrialTrain)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( (10) .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( -0.25e-4 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
