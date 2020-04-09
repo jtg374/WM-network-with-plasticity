@@ -1,6 +1,7 @@
-clc;clear all;close all;    
+function NDF_with_Plasticity_Frameworks(nx,nTrial)
+% clc;clear all;close all;    
 %% load parameters
-param = NDF_with_Plasticity_Parameters()
+param = NDF_with_Plasticity_Parameters(nx,nTrial)
 
 
 %% unpack Connectivity profile 
