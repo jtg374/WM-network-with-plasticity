@@ -1,4 +1,4 @@
-function NDF_with_Plasticity_Frameworks(nx,nTrial)
+function NDF_with_Plasticity_Frameworks(nx,nTrial,datapath)
 % clc;clear all;close all;    
 %% load parameters
 param = NDF_with_Plasticity_Parameters(nx,nTrial)
@@ -50,8 +50,11 @@ clear y
 %% Figures
 close all
 
-
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
+if datapath==0
+    datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
+else
+    datapath = [datapath, datestr(now,'_yymmdd_HH_MM')];
+end
 mkdir(datapath)
 
 % 
