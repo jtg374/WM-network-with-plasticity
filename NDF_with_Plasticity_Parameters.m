@@ -127,23 +127,23 @@ function param = NDF_with_Plasticity_Parameters()
     param.MEE_unperturbed = MEE0;
 
     % % all perturb
-    param.perturbation_type = 'ALL-random-gamma';
-    param.perturbation_EE = perturbation;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_EI = perturbation;
-    MEI0 = MEI; MEI = MEI.*perturbation;
-    param.MEI = MEI;
-    param.MEI_unperturbed = MEI0;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_IE = perturbation;
-    MIE0 = MIE; MIE = MIE.*perturbation;
-    param.MIE = MIE;
-    param.MIE_unperturbed = MIE0;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_II = perturbation;
-    MII0 = MII; MII = MII.*perturbation;
-    param.MII = MII;
-    param.MII_unperturbed = MII0;
+    % param.perturbation_type = 'ALL-random-gamma';
+    % param.perturbation_EE = perturbation;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_EI = perturbation;
+    % MEI0 = MEI; MEI = MEI.*perturbation;
+    % param.MEI = MEI;
+    % param.MEI_unperturbed = MEI0;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_IE = perturbation;
+    % MIE0 = MIE; MIE = MIE.*perturbation;
+    % param.MIE = MIE;
+    % param.MIE_unperturbed = MIE0;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_II = perturbation;
+    % MII0 = MII; MII = MII.*perturbation;
+    % param.MII = MII;
+    % param.MII_unperturbed = MII0;
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
@@ -189,6 +189,6 @@ function param = NDF_with_Plasticity_Parameters()
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
     param.RE_target = 20;
-    param.fM_expr = '@(x,dx,M,x_ref) -2*dx * x'' + 5e-5*diag(x_ref-x)*M ';
+    param.fM_expr = '@(x,dx,M,x_ref) 0*dx * x'' + 5e-5*diag(x_ref-x)*M ';
     % x, dx order of 20. M order of 100;
     param.fM = eval(param.fM_expr);
