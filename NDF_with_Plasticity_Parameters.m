@@ -119,7 +119,7 @@ function param = NDF_with_Plasticity_Parameters()
     a = 0.03;
     param.perturbation_strength = a;
     perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    % MEE0 = MEE; MEE = MEE.*perturbation;
+    MEE0 = MEE; MEE = MEE.*perturbation;
     param.perturbation_type = 'MEE-random-gamma';
 
     param.perturbation = perturbation;
