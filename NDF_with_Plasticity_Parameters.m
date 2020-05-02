@@ -116,7 +116,7 @@ function param = NDF_with_Plasticity_Parameters()
 %     perturbation = rand(nx)*(r(2)-r(1))+r(1);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
 %     param.perturbation_type = 'MEE-random-uniform';
-    a = 0.03;
+    a = 0.3;
     param.perturbation_strength = a;
     perturbation = gamrnd(1/a^2,a^2,nx,nx);
     MEE0 = MEE; MEE = MEE.*perturbation;
