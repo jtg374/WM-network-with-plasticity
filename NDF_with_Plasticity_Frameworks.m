@@ -1,6 +1,7 @@
-function NDF_with_Plasticity_Frameworks(suffix)
+function NDF_with_Plasticity_Frameworks()
 %% load parameters
 param = NDF_with_Plasticity_Parameters()
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/w_homeo_' datestr(now,'yymmdd_HH_MM') ];
 
 
 %% unpack Connectivity profile 
@@ -50,8 +51,7 @@ clear y
 close all
 
 
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_') suffix];
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/xsrule_plus_homeo_' datestr(now,'yymmdd_HH_MM') suffix];
+% datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_') ];
 mkdir(datapath)
 
 % 
