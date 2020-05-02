@@ -14,7 +14,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.TJ = 1e4;
     
     %% Discretizing the space x
-    nx = 64;
+    nx = 128;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
     
