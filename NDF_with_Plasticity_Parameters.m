@@ -105,21 +105,26 @@ function param = NDF_with_Plasticity_Parameters()
 %     perturbation = 10.^(randn(nx)*a);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
 %     param.perturbation_type = 'MEE-random-lognormal';
-    a = 0.03;
-    param.perturbation_strength = a;
-    perturbation = randn(nx)*a+1;
-    perturbation(perturbation<0) = 0;
-    MEE0 = MEE; MEE = MEE.*perturbation;
-    param.perturbation_type = 'MEE-random-normal';
+    % a = 0.03;
+    % param.perturbation_strength = a;
+    % perturbation = randn(nx)*a+1;
+    % perturbation(perturbation<0) = 0;
+    % MEE0 = MEE; MEE = MEE.*perturbation;
+    % param.perturbation_type = 'MEE-random-normal';
 %     r = [0.9 1.1]; 
 %     param.perturbation_range = r;
 %     perturbation = rand(nx)*(r(2)-r(1))+r(1);
 %     MEE0 = MEE; MEE = MEE.*perturbation;
 %     param.perturbation_type = 'MEE-random-uniform';
-% %
-%     param.perturbation = perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
+    a = 0.03;
+    param.perturbation_strength = a;
+    perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    MEE0 = MEE; MEE = MEE.*perturbation;
+    param.perturbation_type = 'MEE-random-gamma';
+
+    param.perturbation = perturbation;
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);

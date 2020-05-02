@@ -1,7 +1,7 @@
 function NDF_with_Plasticity_Frameworks()
 %% load parameters
 param = NDF_with_Plasticity_Parameters()
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/w_homeo_' datestr(now,'yymmdd_HH_MM_') 'ranTrialNormal'];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/w_homeo_' datestr(now,'yymmdd_HH_MM_') 'ranTrialGamma'];
 
 
 %% unpack Connectivity profile 
