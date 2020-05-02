@@ -122,31 +122,31 @@ function param = NDF_with_Plasticity_Parameters()
     % MEE0 = MEE; MEE = MEE.*perturbation;
     param.perturbation_type = 'MEE-random-gamma';
 
-    % param.perturbation = perturbation;
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-
-    % % all perturb
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_EE = perturbation;
-    MEE0 = MEE; MEE = MEE.*perturbation;
+    param.perturbation = perturbation;
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_EI = perturbation;
-    MEI0 = MEI; MEI = MEI.*perturbation;
-    param.MEI = MEI;
-    param.MEI_unperturbed = MEI0;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_IE = perturbation;
-    MIE0 = MIE; MIE = MIE.*perturbation;
-    param.MIE = MIE;
-    param.MIE_unperturbed = MIE0;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
-    param.perturbation_II = perturbation;
-    MII0 = MII; MII = MII.*perturbation;
-    param.MII = MII;
-    param.MII_unperturbed = MII0;
+
+    % % all perturb
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_EE = perturbation;
+    % MEE0 = MEE; MEE = MEE.*perturbation;
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_EI = perturbation;
+    % MEI0 = MEI; MEI = MEI.*perturbation;
+    % param.MEI = MEI;
+    % param.MEI_unperturbed = MEI0;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_IE = perturbation;
+    % MIE0 = MIE; MIE = MIE.*perturbation;
+    % param.MIE = MIE;
+    % param.MIE_unperturbed = MIE0;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % param.perturbation_II = perturbation;
+    % MII0 = MII; MII = MII.*perturbation;
+    % param.MII = MII;
+    % param.MII_unperturbed = MII0;
 
     % previousResult = load("C:\Users\golde\Documents\Research\data\FR_Curr_ring_RK4_distractor_with_Plasticity\190806_11_11_LinearLargePerturb\results.mat");
     % MEE0 = MEE;MEE = previousResult.MEEt(:,:,end);
