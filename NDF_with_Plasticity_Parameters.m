@@ -14,7 +14,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.TJ = 1e4;
     
     %% Discretizing the space x
-    nx = 128;
+    nx = 64;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
     
@@ -111,16 +111,16 @@ function param = NDF_with_Plasticity_Parameters()
     % perturbation(perturbation<0) = 0;
     % MEE0 = MEE; MEE = MEE.*perturbation;
     % param.perturbation_type = 'MEE-random-normal';
-%     r = [0.9 1.1]; 
-%     param.perturbation_range = r;
-%     perturbation = rand(nx)*(r(2)-r(1))+r(1);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.perturbation_type = 'MEE-random-uniform';
-    a = 0.01;
-    param.perturbation_strength = a;
-    perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    r = [0.9 1.1]; 
+    param.perturbation_range = r;
+    perturbation = rand(nx)*(r(2)-r(1))+r(1);
     MEE0 = MEE; MEE = MEE.*perturbation;
-    param.perturbation_type = 'MEE-random-gamma';
+    param.perturbation_type = 'MEE-random-uniform';
+    % a = 0.01;
+    % param.perturbation_strength = a;
+    % perturbation = gamrnd(1/a^2,a^2,nx,nx);
+    % MEE0 = MEE; MEE = MEE.*perturbation;
+    % param.perturbation_type = 'MEE-random-gamma';
 
     param.perturbation = perturbation;
     param.MEE = MEE;
@@ -189,6 +189,6 @@ function param = NDF_with_Plasticity_Parameters()
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
     param.RE_target = 20;
-    param.fM_expr = '@(x,dx,M,x_ref) 0*dx * x'' + 5e-5*diag(x_ref-x)*M ';
+    param.fM_expr = '@(x,dx,M,x_ref) -2*dx * x'' + 5e-5*diag(x_ref-x)*M ';
     % x, dx order of 20. M order of 100;
     param.fM = eval(param.fM_expr);
