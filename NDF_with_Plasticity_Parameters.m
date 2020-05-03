@@ -100,17 +100,17 @@ function param = NDF_with_Plasticity_Parameters()
     % param.perturbation_type = 'Global';
     % param.perturbation_strength = a;
 % random perturbation
-    % a = 0.1;
-    % param.perturbation_strength = a;
-    % perturbation = 10.^(randn(nx)*a);
-    % MEE0 = MEE; MEE = MEE.*perturbation;
-    % param.perturbation_type = 'MEE-random-lognormal';
-    a = 0.03;
+    a = 0.01;
     param.perturbation_strength = a;
-    perturbation = randn(nx)*a+1;
-    perturbation(perturbation<0) = 0;
+    perturbation = 10.^(randn(nx)*a);
     MEE0 = MEE; MEE = MEE.*perturbation;
-    param.perturbation_type = 'MEE-random-normal';
+    param.perturbation_type = 'MEE-random-lognormal';
+    % a = 0.03;
+    % param.perturbation_strength = a;
+    % perturbation = randn(nx)*a+1;
+    % perturbation(perturbation<0) = 0;
+    % MEE0 = MEE; MEE = MEE.*perturbation;
+    % param.perturbation_type = 'MEE-random-normal';
     % r = [0.9 1.1]; 
     % param.perturbation_range = r;
     % perturbation = rand(nx)*(r(2)-r(1))+r(1);
