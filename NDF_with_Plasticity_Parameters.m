@@ -79,23 +79,24 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.perturbation_type = 'local-colwise(presyn)';
 %     param.perturbation_strength = a;    
     % % smooth local perturbation
-%     index_x = 0:dx:pi/8;
-%     index = floor((index_x+pi)/dx)+1;
-%     perturbation = 1 - (1-a)*exp(-((x-0.125*pi)/(pi/2)).^2);
-%     param.perturbation = perturbation;
-%     perturbation = repmat(perturbation',1,nx);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'local-rowwise(postsyn)';
-%     param.perturbation_strength = a;    
-%     param.perturbation_index = index_x;
-% global perturbation
-    MEE0 = MEE; MEE = MEE*a;
+    index_x = 0.125*pi;
+    width_x = pi/4
+    perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
+    param.perturbation = perturbation;
+    perturbation = repmat(perturbation',1,nx);
+    MEE0 = MEE; MEE = MEE.*perturbation;
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'Global';
-    param.perturbation_strength = a;
+    param.perturbation_type = 'local-rowwise(postsyn)';
+    param.perturbation_strength = a;    
+    param.perturbation_index = index_x;
+    param.perturbation_width = width_x;
+% global perturbation
+    % MEE0 = MEE; MEE = MEE*a;
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % param.perturbation_type = 'Global';
+    % param.perturbation_strength = a;
 % random perturbation
 %     a = 0.01;
 %     param.perturbation_strength = a;
