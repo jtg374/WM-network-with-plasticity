@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters()
+function param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -64,7 +64,20 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = 0.97;
+%     a = 0.9;
+    % %sharp local perturbation 
+%     index_x = 0:dx:pi/8;
+%     index = floor((index_x+pi)/dx)+1;
+%     MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'local-rowwise(postsyn)';
+%     param.perturbation_strength = a;    
+% % combine global perturb
+%     MEE = MEE*.9;
+%     param.MEE = MEE;
+%     param.perturbation_type = 'local-rowwise(postsyn)+global';
+%     param.perturbation_strength_global = a*.9;    
     % %sharp local perturbation 
 %     index_x = 0:dx:pi/8;
 %     index = floor((index_x+pi)/dx)+1;
@@ -78,25 +91,25 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.MEE_unperturbed = MEE0;
 %     param.perturbation_type = 'local-colwise(presyn)';
 %     param.perturbation_strength = a;    
-    % % smooth local perturbation
-    index_x = 0.125*pi;
-    width_x = pi/4
-    perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
-    param.perturbation = perturbation;
-    perturbation = repmat(perturbation',1,nx);
-    MEE0 = MEE; MEE = MEE.*perturbation;
+%     % % smooth local perturbation
+%     index_x = 0.125*pi;
+%     width_x = pi/4
+%     perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
+%     param.perturbation = perturbation;
+%     perturbation = repmat(perturbation',1,nx);
+%     MEE0 = MEE; MEE = MEE.*perturbation;
+%     param.MEE = MEE;
+%     param.MEE_unperturbed = MEE0;
+%     param.perturbation_type = 'local-rowwise(postsyn)';
+%     param.perturbation_strength = a;    
+%     param.perturbation_index = index_x;
+%     param.perturbation_width = width_x;
+% global perturbation
+    MEE0 = MEE; MEE = MEE*a;
     param.MEE = MEE;
     param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'local-rowwise(postsyn)';
-    param.perturbation_strength = a;    
-    param.perturbation_index = index_x;
-    param.perturbation_width = width_x;
-% global perturbation
-    % MEE0 = MEE; MEE = MEE*a;
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'Global';
-    % param.perturbation_strength = a;
+    param.perturbation_type = 'Global';
+    param.perturbation_strength = a;
 % random perturbation
 %     a = 0.01;
 %     param.perturbation_strength = a;
@@ -155,13 +168,14 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=1000; % number of trails
+    param.nTrialBatch = 200;
+    nTrialMax=nTrialMax; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
-    tMax = nTrial*tTrial;
+    tMax = nTrialMax*tTrial;
 
     TStimOn = T_on:tTrial:tMax;
 
-    param.nTrial = nTrial;
+    param.nTrialMax = nTrialMax;
     param.TStimOn   = TStimOn;
     param.TStimOff  = TStimOn+Tstim;
     param.TDelayOff = TStimOn+Tstim+Tmemory;
@@ -171,7 +185,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.dt_store = 100;
 
     %% randomize stimlus location
-    stimLoc = randi(nx,nTrial,1)-nx/2; % in training period
+    stimLoc = randi(nx,nTrialMax,1)-nx/2; % in training period
 %     stimLoc = 0:floor(nx/nTrial):nx-1;
     stimLoc_theta = stimLoc/nx*2*pi;
 
@@ -180,5 +194,6 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -0.25e-4 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( -lr .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
+    param.LearningRate = lr;
