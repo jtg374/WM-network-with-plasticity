@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,lr,nTrialMax)
 % clc;clear all;close all;    
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_') num2str(a) '_' num2str(lr) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parameterSearch/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_') num2str(a) '_' num2str(lr) ];
 mkdir(datapath)
 %% load parameters
 param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
