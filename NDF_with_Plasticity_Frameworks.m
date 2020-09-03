@@ -51,7 +51,7 @@ RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:
 close all
 
 
-datapath = ['../../data/FR_Curr_ring_RK4_distractor_with_Plasticity/' datestr(now,'yymmdd_HH_MM_')];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/' datestr(now,'yymmdd_HH_MM_')];
 mkdir(datapath)
 
 %% 
