@@ -196,5 +196,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -.25e-4 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( -1e-4 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
