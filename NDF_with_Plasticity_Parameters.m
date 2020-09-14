@@ -14,7 +14,7 @@ function param = NDF_with_Plasticity_Parameters()
     nx = 64;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
-    np = 16; % number of parallel group
+    np = nx; % number of parallel group
     
     param.N = nx;
     param.dx= dx;
@@ -66,15 +66,15 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = 0.95;
-    %sharp local perturbation 
-    index_x = 0:dx:pi/8;
-    index = floor((index_x+pi)/dx)+1;
-    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'local-rowwise(postsyn)';
-    param.perturbation_strength = a;    
+    a = 0.9;
+    % %sharp local perturbation 
+    % index_x = 0:dx:pi/8;
+    % index = floor((index_x+pi)/dx)+1;
+    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % param.perturbation_type = 'local-rowwise(postsyn)';
+    % param.perturbation_strength = a;    
 % % % combine global perturb
 %     MEE = MEE*.9;
 %     param.MEE = MEE;
@@ -107,11 +107,11 @@ function param = NDF_with_Plasticity_Parameters()
 %     param.perturbation_index = index_x;
 %     param.perturbation_width = width_x;
 % global perturbation
-    % MEE0 = MEE; MEE = MEE*a;
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'Global';
-    % param.perturbation_strength = a;
+    MEE0 = MEE; MEE = MEE*a;
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'Global';
+    param.perturbation_strength = a;
 % random perturbation
 %     a = 0.01;
 %     param.perturbation_strength = a;
@@ -170,7 +170,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=500; % number of trails
+    nTrial=200; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
