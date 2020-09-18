@@ -2,7 +2,7 @@ function dy = NDF_with_Plasticity_Equations(t,y,param)
 
 %% unpack variables
 N = param.N;
-np = param.np;
+np = N;
 MEE = y(N*np*6+3:end);
 MEE = reshape(MEE,N,N);MEE(MEE<0)=0;
 MEI = param.MEI;
@@ -21,13 +21,10 @@ nTrial    = sum(t>=TStimOn);
 %% set stimulus location
 shift=zeros(np,1);
 if nTrial
-    shift = param.stimLoc(:,nTrial);
+    iS = param.stimLoc(nTrial)+N/2+1;
 end
-IEo = zeros(N,np);IIo = zeros(N,np);
-for ip=1:np
-    IEo(:,ip) = circshift(param.IEo,shift(ip));
-    IIo(:,ip) = circshift(param.IIo,shift(ip));
-end
+IEo = param.IEo;
+IIo = param.IIo;
 %% transfer function
 qE = param.qE;
 qI = param.qI;
@@ -48,7 +45,7 @@ K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM = param.fM;
-    dMEE= fM(RE,dRe_)* (1-IStim)/np;
+    dMEE= fM(RE(:,iS),dRe_(:,iS))* (1-IStim);
     %
 else 
     dMEE=zeros(N,N);

@@ -14,7 +14,7 @@ dt_store = param.dt_store;
 
 %% pack initial values
 nx = param.N;
-np = param.np;
+np = nx;
 y0 = [0;              % Stimlus Current Strength
       0;              % Wipe Current Strength
       zeros(6*nx*np,1);  % 6*N state variables

@@ -19,7 +19,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.N = nx;
     param.dx= dx;
     param.x = x;
-    param.np = np;
+    % param.np = np;
     
     %% Connectivity Profile
     J = 100;
@@ -160,7 +160,11 @@ function param = NDF_with_Plasticity_Parameters()
     JEO = 2*J;
     IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
     
-    param.IEo = JEO*IEO_init;
+
+    IEo = gallery('circul',JEO*IEO_init);
+    IEo = circshift(IEo,[0 -pi/dx]);
+    
+    param.IEo = IEo;
     param.IIo = 0;
     
     %% simulation timing in milisecond
@@ -170,7 +174,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=200; % number of trails
+    nTrial=2000; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -186,15 +190,13 @@ function param = NDF_with_Plasticity_Parameters()
     param.dt_store = 100;
 
     %% randomize stimlus location
-    stimLoc = randi(floor(nx/np),np,nTrial); % random location in each group (1-4)
-    stimLoc = stimLoc + (0:floor(nx/np):(nx-1))'; % add level to each group
-    stimLoc = stimLoc - nx/2; % center to zero
-    stimLoc_theta = stimLoc/nx*2*pi;
+    stimLoc = randi(nx,nTrial,1)-nx/2-1; % random location in each group (1-4)
+    stimLoc_theta = stimLoc*dx;
 
     param.stimLoc = stimLoc;
     param.stimLoc_theta = stimLoc_theta;
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -1e-4 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( .25e-4 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
