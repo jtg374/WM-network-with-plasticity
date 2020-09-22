@@ -14,7 +14,7 @@ dt_store = param.dt_store;
 
 %% pack initial values
 nx = param.N;
-np = nx;
+np = param.np;
 y0 = [0;              % Stimlus Current Strength
       0;              % Wipe Current Strength
       zeros(6*nx*np,1);  % 6*N state variables
@@ -52,16 +52,17 @@ close all
 
 
 datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/' datestr(now,'yymmdd_HH_MM_')];
+% datapath = ['../../data/' datestr(now,'yymmdd_HH_MM_')];
 mkdir(datapath)
 
 %% 
 
 h2=figure(2); %imagesc([RE RE1])
 tIndex = t>=TStimOn(1) & t<TDelayOff(10);
-subplot(2,1,1);imagesc(squeeze(RE(:,8,tIndex)),[0 50]);title('first 10 trials')
+subplot(2,1,1);imagesc(squeeze(RE(:,1,tIndex)),[0 50]);title('first 10 trials')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
 tIndex = t>=param.TStimOn(end-9) & t<TDelayOff(end);
-subplot(2,1,2);imagesc(squeeze(RE(:,8,tIndex)),[0 50]);title('last 10 trials')
+subplot(2,1,2);imagesc(squeeze(RE(:,1,tIndex)),[0 50]);title('last 10 trials')
 ylabel('position (80\theta / 2\pi)','FontSize',10)
 xlabel('Time (a.u.)','FontSize',14)
 saveas(h2,[datapath,'/2.fig'])
