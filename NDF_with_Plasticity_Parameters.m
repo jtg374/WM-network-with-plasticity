@@ -14,7 +14,7 @@ function param = NDF_with_Plasticity_Parameters()
     nx = 64;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
-    np = 4; % number of parallel group
+    np = nx; % number of parallel group
     
     param.N = nx;
     param.dx= dx;
@@ -174,7 +174,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=500; % number of trails
+    nTrial=5000; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -203,5 +203,5 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -1e-4 .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( -.25e-4 .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);
