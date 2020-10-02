@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters()
+function param = NDF_with_Plasticity_Parameters(a,lambda,nTrial)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -66,7 +66,7 @@ function param = NDF_with_Plasticity_Parameters()
     param.qE = @(x) x.*(x>0);
     param.qI = @(x) x.*(x>0);
     %% Perturbations
-    a = 0.9;
+    % a = 0.9;
     % %sharp local perturbation 
     % index_x = 0:dx:pi/8;
     % index = floor((index_x+pi)/dx)+1;
@@ -174,7 +174,7 @@ function param = NDF_with_Plasticity_Parameters()
     Tmemory = 3000;
     Tforget = 1000;
     
-    nTrial=5000; % number of trails
+    % nTrial=5000; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrial*tTrial;
 
@@ -203,5 +203,6 @@ function param = NDF_with_Plasticity_Parameters()
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -.25e-4 .* dx ) * x'' ';
+    param.lambda = lambda; %0.25e-4
+    param.fM_expr = '@(x,dx) ( -param.lambda .* dx ) * x'' ';
     param.fM = eval(param.fM_expr);

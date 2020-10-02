@@ -1,7 +1,15 @@
-clc;clear all;close all;    
+% clc;clear all;close all;    
+function NDF_with_Plasticity_Frameworks(a,lambda,nTrial)
 %% load parameters
-param = NDF_with_Plasticity_Parameters()
+param = NDF_with_Plasticity_Parameters(a,lambda,nTrial)
 
+
+% lambda = param.lambda;
+ap = round(param.perturbation_strength*100);
+% nTrial = param.nTrial;
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/UniformPerturbLearningRateDrill/' datestr(now,'yymmdd_HH_MM_') 'UniformP' num2str(ap) 'LR' num2str(lambda) 'T' num2str(nTrial) ];
+% datapath = ['../../data/' datestr(now,'yymmdd_HH_MM_')];
+mkdir(datapath)
 
 %% unpack Connectivity profile 
 MEE = param.MEE;
@@ -49,11 +57,6 @@ RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:
 
 %% Figures
 close all
-
-
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/' datestr(now,'yymmdd_HH_MM_')];
-% datapath = ['../../data/' datestr(now,'yymmdd_HH_MM_')];
-mkdir(datapath)
 
 %% 
 
@@ -245,4 +248,6 @@ saveas(h2,[datapath,'/2.jpg'])
 % % 
 %% save results
 save([datapath,'/param.mat'],'-struct','param');
-save([datapath,'/results.mat'],'t','TDelayOff','RE','RI','MEEt');
+save([datapath,'/resultsFull.mat'],'t','TDelayOff','RE','RI','MEEt','-v7.3');
+RE_readout = RE(:,:,TDelayOff/dt_store);
+save([datapath,'/results.mat'],'t','TDelayOff','RE_readout','MEEt','-v7.3');
