@@ -37,6 +37,7 @@ Tmax = param.Tmax;
 %% Solving ODE equations
 clear textprogressbar % will cause trouble if integrate with @odetpbar while textprogressbar is in environment
 options = odeset('RelTol',1e-3,'AbsTol',1e-5,'OutputFcn',@odetpbar); % will print progressbar
+disp(datapath)
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 [t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
     0:dt_store:Tmax,y0,options);
