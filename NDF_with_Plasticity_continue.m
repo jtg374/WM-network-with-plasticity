@@ -88,6 +88,7 @@ saveas(h2,[datapath,'/2-' num2str(param.nTrial) '.fig'])
 saveas(h2,[datapath,'/2-' num2str(param.nTrial) '.jpg'])
 
 %% save results
+disp(datapath)
 save([datapath,'/resultsFull' num2str(param.nTrial) '.mat'],'t','RE','RI','-v7.3');
 new.RE_readout = RE(:,:,((T_on+Tstim+Tmemory):tTrial:(nTrial*tTrial))/dt_store);
 MEEt = cat(3,MEEt,new.MEEt);

@@ -248,6 +248,7 @@ saveas(h2,[datapath,'/2.jpg'])
 % % % % hold off
 % % 
 %% save results
+disp(datapath)
 save([datapath,'/param.mat'],'-struct','param');
 save([datapath,'/resultsFull.mat'],'t','TDelayOff','RE','RI','MEEt','-v7.3');
 RE_readout = RE(:,:,TDelayOff/dt_store);
