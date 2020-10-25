@@ -2,12 +2,13 @@ function dy = NDF_with_Plasticity_Equations(t,y,param)
 
 % unpack variables
 N = param.N;
-MEE = y(N*6+3:end);
+np = param.np;
+MEE = y(N*np*6+3:end);
 MEE = reshape(MEE,N,N);MEE(MEE<0)=0;
 MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
-R = y(3:N*6+2);R = reshape(R,N,6);RE = R(:,1);RI = R(:,2);SEE = R(:,3);SIE = R(:,4);SEI = R(:,5);SII = R(:,6);
+R = y(3:N*np*6+2);R = reshape(R,N,np,6);RE = R(:,:,1);RI = R(:,:,2);SEE = R(:,:,3);SIE = R(:,:,4);SEI = R(:,:,5);SII = R(:,:,6);
 IStim = y(1); IWipe=y(2);
 
 % load timing
@@ -18,11 +19,16 @@ TForgetOff= param.TForgetOff;
 nTrial    = sum(t>=TStimOn);
 
 % set stimulus location
-shift=0;
+shift=zeros(np,1);
 if nTrial
-    shift = param.stimLoc(nTrial);
+    shift = param.stimLoc(:,nTrial);
+    iS = param.pNp(nTrial);
 end
-IEo = circshift(param.IEo,shift);IIo = circshift(param.IIo,shift);
+IEo = zeros(N,np);IIo = zeros(N,np);
+for ip=1:np
+    IEo(:,ip) = circshift(param.IEo,shift(ip));
+    IIo(:,ip) = circshift(param.IIo,shift(ip));
+end
 % transfer function
 qE = param.qE;
 qI = param.qI;
@@ -43,11 +49,18 @@ K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM = param.fM;
-    dMEE= fM(RE,dRe_)* (1-IStim);
+    dMEE= fM(RE(:,iS),dRe_(:,iS))* (1-IStim);
     %
 else 
     dMEE=zeros(N,N);
 end
 
 % pack variable derivatives
-dy=[dIt;dIw;dRe;dRi;dSee;dSie;dSei;dSii;reshape(dMEE,N*N,1)];  
+dy=[dIt;dIw;
+    reshape(dRe,N*np,1);
+    reshape(dRi,N*np,1);
+    reshape(dSee,N*np,1);
+    reshape(dSie,N*np,1);
+    reshape(dSei,N*np,1);
+    reshape(dSii,N*np,1);
+    reshape(dMEE,N*N,1)];  

@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
+function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -14,10 +14,12 @@ function param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
     nx = 64;
     dx = 2*pi/nx;
     x = -pi:dx:pi-dx; %periodic boundary 
+    np = nx;
     
     param.N = nx;
     param.dx= dx;
     param.x = x;
+    param.np = np;
     
     %% Connectivity Profile
     J = 100;
@@ -160,13 +162,13 @@ function param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;
-    
+   
     %% simulation timing in milisecond
 
     T_on = 500; %ms
     Tstim = 500;
     Tmemory = 3000;
-    Tforget = 1000;
+    Tforget = 0;
     
     param.nTrialBatch = 200;
     nTrialMax=nTrialMax; % number of trails
@@ -175,25 +177,34 @@ function param = NDF_with_Plasticity_Parameters(a,lr,nTrialMax)
 
     TStimOn = T_on:tTrial:tMax;
 
-    param.nTrialMax = nTrialMax;
+    param.nTrial = nTrialMax;
     param.TStimOn   = TStimOn;
+    param.TrialOn   = TStimOn-T_on;
     param.TStimOff  = TStimOn+Tstim;
     param.TDelayOff = TStimOn+Tstim+Tmemory;
     param.TForgetOff= TStimOn+Tstim+Tmemory+Tforget;
     param.Tmax = tMax;
-
+    param.tTrial = tTrial;
     param.dt_store = 100;
 
     %% randomize stimlus location
-    stimLoc = randi(nx,nTrialMax,1)-nx/2; % in training period
-%     stimLoc = 0:floor(nx/nTrial):nx-1;
+    stimLoc = randi(floor(nx/np),np,nTrialMax); % random location in each group (1-4)
+    stimLoc = stimLoc + (0:floor(nx/np):(nx-1))'; % add level to each group
+    stimLoc = stimLoc - nx/2; % center to zero
     stimLoc_theta = stimLoc/nx*2*pi;
+
+    pNp = randi(np,nTrialMax);
 
     param.stimLoc = stimLoc;
     param.stimLoc_theta = stimLoc_theta;
+    param.pNp = pNp;
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -lr .* dx ) * x'' ';
+    param.fM_expr = '@(x,dx) ( -lrD .* dx ) * x'' '; %differential plasticity within trial
     param.fM = eval(param.fM_expr);
-    param.LearningRate = lr;
+    param.LearningRateDifferential = lrD;
+    
+    param.LearningRateHomeostatic = lrH;
+    
+    
