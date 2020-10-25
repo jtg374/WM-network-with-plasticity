@@ -9,4 +9,4 @@
 
 module purge
 module load matlab/2018a
-matlab -nodisplay -r "NDF_with_Plasticity_Frameworks($1,$2,$3);quit"
+matlab -nodisplay -r "NDF_with_Plasticity_Frameworks(0.95,0,1e-7,5000);quit"
