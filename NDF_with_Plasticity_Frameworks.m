@@ -74,3 +74,5 @@ for iTrial=1:nTrial
 
 end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
+
+save([datapath,'/results.mat'],'RE_readout','MEEt');
