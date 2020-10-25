@@ -211,5 +211,6 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
     param.LearningRateDifferential = lrD;
     
     param.LearningRateHomeostatic = lrH;
+    param.r_target = 20;
     
     
