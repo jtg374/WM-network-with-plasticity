@@ -50,7 +50,7 @@ for iTrial=1:nTrial
     % Input = Input_stim - Input_forget;
     save([datapath,'/results_' num2str(iTrial) '.mat'],'t','RE','RI');
     %% apply homeostatic rule
-    r_target = 15;
+    r_target = param.r_target;
     r_mean = mean(mean(RE,3),2);
     MEE = MEE + diag(r_target-r_mean)*MEE*tTrial*lrH;
     MEEt(:,:,iTrial) = MEE;
