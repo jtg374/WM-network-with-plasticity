@@ -1,7 +1,8 @@
 function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parameterSearch/' datestr(now,'yymmdd_HH_MM_') num2str(a) '_' num2str(lrD) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_ParallelHomeostatic/' datestr(now,'yymmdd_HH_MM_') 'TR' ];
 mkdir(datapath)
+disp(datapath)
 %% load parameters
 param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
 save([datapath,'/param.mat'],'-struct','param');
