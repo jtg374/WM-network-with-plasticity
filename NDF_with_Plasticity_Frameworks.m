@@ -1,10 +1,12 @@
-function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax)
+function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax,r_target)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_ParallelHomeostatic/' datestr(now,'yymmdd_HH_MM_') 'TR' ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/UniformPerturbHomeostaticOnly/' 'UniformP' num2str(a) 'HT' num2str(r_target) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') ];
 mkdir(datapath)
 disp(datapath)
+mkdir([datapath '/FullData'])
+mkdir([datapath '/ActFigures'])
 %% load parameters
-param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
+param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
 save([datapath,'/param.mat'],'-struct','param');
 
 %% unpack Connectivity profile 
@@ -49,19 +51,27 @@ for iTrial=1:nTrial
     % Input_forget=y(:,2);
     % Input_stim = y(:,1); 
     % Input = Input_stim - Input_forget;
-    save([datapath,'/results_' num2str(iTrial) '.mat'],'t','RE','RI');
+    save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI');
     %% apply homeostatic rule
     r_target = param.r_target;
     r_mean = mean(mean(RE,3),2);
     MEE = MEE + diag(r_target-r_mean)*MEE*tTrial*lrH;
     MEEt(:,:,iTrial) = MEE;
     %% plot and save
+    addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
     if mod(iTrial,100)==0
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
-        ylabel('position')
+        ylabel('neuron')
         xlabel('Time')
-        saveas(h2,[datapath,'/RE_' num2str(iTrial) '.jpg'])    
+        colormap(cubehelix)
+        saveas(h2,[datapath,'/ActFigures/RE_T_' num2str(iTrial) '.jpg'])
+        h3=figure;
+        imagesc(RE(:,:,end),[0 50])
+        xlabel('stim position')
+        ylabel('neuron')
+        colormap(cubehelix)
+        saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS'), '. R_bar=',num2str(mean(r_mean))])
     RE_readout(:,iTrial) = RE(:,end);

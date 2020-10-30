@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
+function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -81,16 +81,16 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
 %     param.perturbation_type = 'local-rowwise(postsyn)+global';
 %     param.perturbation_strength_global = a*.9;    
     % %sharp local perturbation 
-    index_x = 0:dx:pi/8;
-    index = floor((index_x+pi)/dx)+1;
-    MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'local-rowwise(postsyn)';
-    param.perturbation_strength = a;    
-    MEE(:,index) = a*MEE(:,index); 
-    param.MEE = MEE;
-    param.perturbation_type = 'row+col perturbation';
+    % index_x = 0:dx:pi/8;
+    % index = floor((index_x+pi)/dx)+1;
+    % MEE0 = MEE; MEE(index,:) = a*MEE(index,:); 
+    % param.MEE = MEE;
+    % param.MEE_unperturbed = MEE0;
+    % param.perturbation_type = 'local-rowwise(postsyn)';
+    % param.perturbation_strength = a;    
+    % MEE(:,index) = a*MEE(:,index); 
+    % param.MEE = MEE;
+    % param.perturbation_type = 'row+col perturbation';
     
 
 %     MEE0 = MEE; MEE(:,index) = a*MEE(:,index); 
@@ -112,11 +112,11 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
 %     param.perturbation_index = index_x;
 %     param.perturbation_width = width_x;
 % global perturbation
-    % MEE0 = MEE; MEE = MEE*a;
-    % param.MEE = MEE;
-    % param.MEE_unperturbed = MEE0;
-    % param.perturbation_type = 'Global';
-    % param.perturbation_strength = a;
+    MEE0 = MEE; MEE = MEE*a;
+    param.MEE = MEE;
+    param.MEE_unperturbed = MEE0;
+    param.perturbation_type = 'Global';
+    param.perturbation_strength = a;
 % random perturbation
 %     a = 0.01;
 %     param.perturbation_strength = a;
@@ -211,6 +211,6 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax)
     param.LearningRateDifferential = lrD;
     
     param.LearningRateHomeostatic = lrH;
-    param.r_target = 20;
+    param.r_target = r_target;
     
     
