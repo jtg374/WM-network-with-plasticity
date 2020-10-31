@@ -44,16 +44,8 @@ dSii= 1./param.TII.*(-SII + RI);
 % % External Stimilus
 dIt = 1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
 dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
-% % Plasticity
-K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
-if any( (t>TStimOff).* (t<TDelayOff) )
-    %
-    fM = param.fM;
-    dMEE= fM(RE(:,iS),dRe_(:,iS))* (1-IStim);
-    %
-else 
-    dMEE=zeros(N,N);
-end
+% % Plasticity is now outside this function
+dMEE=zeros(N,N);
 
 % pack variable derivatives
 dy=[dIt;dIw;

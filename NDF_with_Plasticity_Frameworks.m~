@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax,r_target)
 % clc;clear all;close all;    
-datapath = ['/home/jtg374/data/WM_Plasticity_parallel/UniformPerturbHomeostaticOnly/' 'UniformP' num2str(a) 'HT' num2str(r_target) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/UniformPerturbHomeostaticOnly/' 'UniformP' num2str(a) 'HT' num2str(r_target) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
@@ -42,6 +42,8 @@ for iTrial=1:nTrial
         TrialOn(iTrial):dt_store:TrialEnd(iTrial),y0,options);
     %% unpack and save batch results
     nt = length(t);
+    Mt = y(:,nx*np*6+3:end);Mt = reshape(Mt,nt,nx,nx);
+    MEE = Mt(end,:,:); MEE = squeeze(MEE);
     Rt = y(:,3:nx*np*6+2);Rt = reshape(Rt,nt,nx,np,6);Rt = permute(Rt,[2,3,1,4]);
     RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:,:,:,5);SII = Rt(:,:,:,6); 
     clear Rt;
@@ -56,11 +58,9 @@ for iTrial=1:nTrial
     MEEt(:,:,iTrial) = MEE;
     %% apply XS rule
     dr = diff(RE,1,3);
-    K = 10/500*dt_store; dr(dr>K) = K;
+    K = 10/500*dt_store
     for it = (T_on/dt_store):(nt-1)
-        MEE = MEE + lrD*dr(:,:,it)*RE(:,:,it)'/nx;
-    end
-    MEEt(:,:,iTrial) = MEE;    
+        MEE = MEE + 
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
     if mod(iTrial,100)==0

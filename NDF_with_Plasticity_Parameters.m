@@ -206,8 +206,7 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -lrD .* dx ) * x'' '; %differential plasticity within trial
-    param.fM = eval(param.fM_expr);
+
     param.LearningRateDifferential = lrD;
     
     param.LearningRateHomeostatic = lrH;
