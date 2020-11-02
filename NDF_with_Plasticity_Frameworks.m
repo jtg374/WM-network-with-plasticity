@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax,r_target)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/ParallelXS/' 'UniformP' num2str(a) 'DLR' num2str(lrD) datestr(now,'_yymmdd_HH_MM') ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/ParallelXS/' 'UniformP' num2str(a*100) 'DLR' num2str(lrD) datestr(now,'_yymmdd_HH_MM') ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
@@ -35,7 +35,7 @@ options = odeset('RelTol',1e-3,'AbsTol',1e-5);
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 nTrial = param.nTrial;
 MEEt = zeros(nx,nx,nTrial);
-RE_readout = zeros(nx,nTrial);
+RE_readout = zeros(nx,np,nTrial);
 for iTrial=1:nTrial
     %% solve current batch
     [t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
@@ -78,7 +78,7 @@ for iTrial=1:nTrial
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS'), '. R_bar=',num2str(mean(r_mean))])
-    RE_readout(:,iTrial) = RE(:,end);
+    RE_readout(:,:,iTrial) = RE(:,:,end);
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
@@ -90,3 +90,4 @@ end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 
 save([datapath,'/results.mat'],'RE_readout','MEEt');
+saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
