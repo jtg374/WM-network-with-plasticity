@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrialMax,r_target)
 % clc;clear all;close all;    
-datapath = ['/home/jtg374/data/WM_Plasticity_parallel/UniformPerturbHomeostaticOnly/' 'UniformP' num2str(a) 'HT' num2str(r_target) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity_parallel/ParallelXS/' 'UniformP' num2str(a) 'DLR' num2str(lrD) datestr(now,'_yymmdd_HH_MM') ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
@@ -58,12 +58,12 @@ for iTrial=1:nTrial
     dr = diff(RE,1,3);
     K = 10/500*dt_store; dr(dr>K) = K;
     for it = (T_on/dt_store):(nt-1)
-        MEE = MEE + lrD*dr(:,:,it)*RE(:,:,it)'/nx;
+        MEE = MEE - lrD*dr(:,:,it)*RE(:,:,it)'/nx;
     end
     MEEt(:,:,iTrial) = MEE;    
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
-    if mod(iTrial,100)==0
+    if mod(iTrial,100)==0 | ismember(iTrial,[1,2,5,10,20,50])
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
         ylabel('neuron')
