@@ -81,7 +81,6 @@ for iTrial=1:nTrial
             zeros(6*nx*np,1);  % 6*N state variables
             reshape(MEE,nx*nx,1) % E to E Connection Strength
             ]; 
-    nTrial = nTrial+1; 
 
 end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
