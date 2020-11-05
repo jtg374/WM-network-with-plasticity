@@ -1,4 +1,5 @@
 function NDF_with_Plasticity_continue(datapath,nTrialAdd)
+    disp(datapath)
 
 param = load([datapath,'param.mat']);
 nx = param.N;
@@ -123,6 +124,6 @@ disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 disp(datapath)
 MEEt = cat(3,old.MEEt,new.MEEt);
 RE_readout = cat(3,old.RE_readout,new.RE_readout);
-save([datapath,'/results.mat'],'t','TDelayOff','RE_readout','MEEt','-v7.3');
+save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3');
 save([datapath,'/param.mat'],'-struct','param');
 saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])

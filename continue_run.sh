@@ -9,4 +9,4 @@
 
 module purge
 module load matlab/2018a
-matlab -nodisplay -r "NDF_with_Plasticity_continue('$1',$2);quit"
+matlab -nodisplay -r "NDF_with_Plasticity_continue('$2',$1);quit"
