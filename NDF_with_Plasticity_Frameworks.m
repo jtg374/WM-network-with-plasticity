@@ -75,6 +75,7 @@ for iTrial=1:nTrial
         xlabel('stim position')
         ylabel('neuron')
         colormap(cubehelix)
+        colorbar
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS'), '. R_bar=',num2str(mean(r_mean))])

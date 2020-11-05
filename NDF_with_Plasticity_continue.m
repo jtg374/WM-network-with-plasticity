@@ -55,12 +55,17 @@ TrialOn = param.TrialOn;
 T_on = param.TStimOn(1);
 TrialEnd = param.TDelayOff;
 dt_store = param.dt_store;
+%% load plasticity
+lrD = param.LearningRateDifferential;    
+lrH = param.LearningRateHomeostatic;
+r_target = param.r_target;
+
 
 %% Solving ODE equations
 options = odeset('RelTol',1e-3,'AbsTol',1e-5); 
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 new.MEEt = zeros(nx,nx,nTrialAdd);
-new.RE_readout = zeros(nx,nTrialAdd);
+new.RE_readout = zeros(nx,np,nTrialAdd);
 for iTrial=(nTrialOld+1):param.nTrial
     %% solve current batch
     [t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
@@ -100,10 +105,11 @@ for iTrial=(nTrialOld+1):param.nTrial
         xlabel('stim position')
         ylabel('neuron')
         colormap(cubehelix)
+        colorbar
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS'), '. R_bar=',num2str(mean(r_mean))])
-    new.RE_readout(:,iTrial) = RE(:,end);
+    new.RE_readout(:,:,iTrial) = RE(:,:,end);
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
@@ -119,3 +125,4 @@ MEEt = cat(3,old.MEEt,new.MEEt);
 RE_readout = cat(3,old.RE_readout,new.RE_readout);
 save([datapath,'/results.mat'],'t','TDelayOff','RE_readout','MEEt','-v7.3');
 save([datapath,'/param.mat'],'-struct','param');
+saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
