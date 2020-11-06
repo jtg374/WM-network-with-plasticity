@@ -63,8 +63,8 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
     qI = @(x) maxfI*(x-thI).^NI./(sigI^NI+(x-thI).^NI).*(x>thI);
 %     param.qE = qE;
 %     param.qI = qI;
-    param.qE = @(x) x.*(x>0);
-    param.qI = @(x) x.*(x>0);
+    param.qE = @(x) x.*(x>0) - (x-maxfE).*(x>maxfE);
+    param.qI = @(x) x.*(x>0) - (x-maxfI).*(x>maxfI);
     %% Perturbations
 %     a = 0.9;
     % %sharp local perturbation 
