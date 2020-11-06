@@ -34,9 +34,9 @@ param.stimLoc = [param.stimLoc stimLoc];
 param.stimLoc_theta = [param.stimLoc_theta stimLoc_theta];
 param.pNp = [param.pNp(:,1);pNp];
 
-old=load([datapath,'results.mat']);
+load([datapath,'results.mat']);
 %% unpack Connectivity profile 
-MEE = old.MEEt(:,:,end);
+MEE = MEEt(:,:,end);
 MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
@@ -67,6 +67,9 @@ options = odeset('RelTol',1e-3,'AbsTol',1e-5);
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 new.MEEt = zeros(nx,nx,nTrialAdd);
 new.RE_readout = zeros(nx,np,nTrialAdd);
+MEEt = cat(3,MEEt,new.MEEt);
+RE_readout = cat(3,RE_readout,new.RE_readout);
+clear new
 for iTrial=(nTrialOld+1):param.nTrial
     %% solve current batch
     [t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
@@ -83,14 +86,14 @@ for iTrial=(nTrialOld+1):param.nTrial
     r_target = param.r_target;
     r_mean = mean(mean(RE,3),2);
     MEE = MEE + diag(r_target-r_mean)*MEE*tTrial*lrH;
-    new.MEEt(:,:,iTrial) = MEE;
+    MEEt(:,:,iTrial) = MEE;
     %% apply XS rule
     dr = diff(RE,1,3);
     K = 10/500*dt_store; dr(dr>K) = K;
     for it = (T_on/dt_store):(nt-1)
         MEE = MEE - lrD*dr(:,:,it)*RE(:,:,it)'/nx;
     end
-    new.MEEt(:,:,iTrial) = MEE;    
+    MEEt(:,:,iTrial) = MEE;    
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
     if mod(iTrial,100)==0 | ismember(iTrial,[1,2,5,10,20,50])
@@ -110,7 +113,7 @@ for iTrial=(nTrialOld+1):param.nTrial
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS'), '. R_bar=',num2str(mean(r_mean))])
-    new.RE_readout(:,:,iTrial) = RE(:,:,end);
+    RE_readout(:,:,iTrial) = RE(:,:,end);
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
@@ -122,8 +125,6 @@ disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 
 %% save results
 disp(datapath)
-MEEt = cat(3,old.MEEt,new.MEEt);
-RE_readout = cat(3,old.RE_readout,new.RE_readout);
 save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3');
 save([datapath,'/param.mat'],'-struct','param');
 saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
