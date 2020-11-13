@@ -48,6 +48,7 @@ for iTrial=1:nTrial
     Rt = y(:,3:nx*np*6+2);Rt = reshape(Rt,nt,nx,np,6);Rt = permute(Rt,[2,3,1,4]);
     RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:,:,:,5);SII = Rt(:,:,:,6); 
     clear Rt;
+    MEEt(:,:,iTrial) = MEE;    
     save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI');
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
