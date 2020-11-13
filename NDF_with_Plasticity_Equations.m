@@ -49,7 +49,7 @@ K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
 if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM = param.fM;
-    dMEE= fM(RE(:,iS),dRe_(:,iS))* (1-IStim);
+    dMEE= fM(RE(:,iS),dRe_(:,iS),MEE)* (1-IStim);
     %
 else 
     dMEE=zeros(N,N);

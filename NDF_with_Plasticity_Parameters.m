@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
+function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -175,8 +175,7 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
     Tmemory = 3000;
     Tforget = 0;
     
-    param.nTrialBatch = 200;
-    nTrialMax=nTrialMax; % number of trails
+    nTrialMax=nTrial; % number of trails
     tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
     tMax = nTrialMax*tTrial;
 
@@ -206,7 +205,7 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrialMax,r_target)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_expr = '@(x,dx) ( -lrD .* dx ) * x'' '; %differential plasticity within trial
+    param.fM_expr = '@(x,dx,M)  -lrD .* dx*x'' + lrH * diag(r_target-x)*M '; %differential plasticity within trial
     param.fM = eval(param.fM_expr);
     param.LearningRateDifferential = lrD;
     
