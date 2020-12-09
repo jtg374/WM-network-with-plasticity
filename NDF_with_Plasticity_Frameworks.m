@@ -45,7 +45,7 @@ for iTrial=1:nTrial
         TrialOn(iTrial):dt_store:TrialEnd(iTrial),y0,options);
     %% unpack and save batch results
     nt = length(t);
-    gt = y(:,nx*nx+nx*np*6+3:end)';
+    gt = y(:,nx*nx+nx*np*6+3:end)';g=gt(:,end);
     Mt = y(:,nx*np*6+3:nx*nx+nx*np*6+2);Mt = reshape(Mt,nt,nx,nx);
     MEE = Mt(end,:,:); MEE = squeeze(MEE);
     Rt = y(:,3:nx*np*6+2);Rt = reshape(Rt,nt,nx,np,6);Rt = permute(Rt,[2,3,1,4]);
@@ -77,7 +77,7 @@ for iTrial=1:nTrial
             0;              % Wipe Current Strength
             zeros(6*nx*np,1);  % 6*N state variables
             reshape(MEE,nx*nx,1) % E to E Connection Strength
-            ]; 
+            g]; 
 
 end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
@@ -87,12 +87,12 @@ saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
 
 h=figure;
 plot(g_readout')
-c = hsv(N);
+c = hsv(nx);
 set(gca, 'ColorOrder',c, 'NextPlot','ReplaceChildren');
 plot(g_readout')
 xlabel('Trial')
 ylabel('gain')
 
-saveas(h,[datapath,'gain.fig'])
-saveas(h,[datapath,'gain.jpg'])
+saveas(h,[datapath,'/gain.fig'])
+saveas(h,[datapath,'/gain.jpg'])
 
