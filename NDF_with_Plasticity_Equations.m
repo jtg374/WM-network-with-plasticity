@@ -5,7 +5,7 @@ N = param.N;
 np = param.np;
 g = y(N*N+N*np*6+3:end);
 MEE = y(N*np*6+3:N*np*6+N*N+2);
-MEE = reshape(MEE,N,N);MEE(MEE<0)=0;
+MEE = reshape(MEE,N,N);
 MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
@@ -36,7 +36,7 @@ qI = param.qI;
 
 % main ode eqs
 % % Neurons Populations and Synapses
-dRe = 1./param.TE .*( -RE + qE(diag(g)*MEE*SEE - MEI*SEI + IEo*IStim)*(1-IWipe));
+dRe = 1./param.TE .*( -RE + qE(diag(g)*MEE.*(MEE>=0)*SEE - MEI*SEI + IEo*IStim)*(1-IWipe));
 dRi = 1./param.TI .*( -RI + qI(MIE*SIE - MII*SII + IIo*IStim)*(1-IWipe));
 dSee= 1./param.TEE.*(-SEE + RE);
 dSie= 1./param.TIE.*(-SIE + RE);
@@ -51,11 +51,11 @@ if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM_XS = param.fM_XS;
     fM_homeo = param.fM_homeo;
-    dMEE= fM_XS(RE(:,iS),dRe(:,iS))* (1-IStim);
+    dMEE= fM_XS(RE(:,iS),dRe(:,iS))* (1-IStim)-MEE.*(MEE<0);
     dg  = fM_homeo(RE(:,iS),g);
     %
 else 
-    dMEE=zeros(N,N);
+    dMEE=-MEE.*(MEE<0);
     dg = zeros(N,1);
 end
 
