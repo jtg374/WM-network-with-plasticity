@@ -47,17 +47,16 @@ dIt = 1./param.Tinput .*( -IStim + sum(t>=TStimOn)   - sum(t>TStimOff)  );
 dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
 % % Plasticity
 % K=10/500;dRe_ = dRe;dRe_(dRe>K)=K; % set an upper bound for plasticity
-tau_h = param.tau_homeo;
 if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM_XS = param.fM_XS;
     fM_homeo = param.fM_homeo;
     dMEE= fM_XS(RE(:,iS),dRe(:,iS))* (1-IStim);
-    dg  = fM_homeo(RE(:,iS),g) - (g-1)/tau_h;
+    dg  = fM_homeo(RE(:,iS),g);
     %
 else 
     dMEE=zeros(N,N);
-    dg =  - (g-1)/tau_h;
+    dg = zeros(N,1);
 end
 
 % pack variable derivatives

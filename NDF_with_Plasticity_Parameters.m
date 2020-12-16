@@ -205,7 +205,6 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.tau_homeo = 1e10;
     param.fM_XS_expr = '@(x,dx)  -lrD .* dx*x'' '; %differential plasticity 
     param.fM_homeo_expr = '@(x,g)  lrH * (r_target-x).*g '; %homeostatic plasticity
     param.fM_XS = eval(param.fM_XS_expr);
