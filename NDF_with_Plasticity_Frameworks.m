@@ -69,12 +69,12 @@ for iTrial=1:nTrial
         colormap(cubehelix)
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
         h4=figure;
-        imagesc(MEE)
+        imagesc(diag(g)*MEE)
         xlabel('pre-syn')
         xlabel('post-syn')
         colormap(cubehelix)
         colorbar
-        saveas(h4,[datapath,'/ActFigures/MEE_' num2str(iTrial) '.jpg'])
+        saveas(h4,[datapath,'/ActFigures/g-MEE_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS')])
     RE_readout(:,:,iTrial) = RE(:,:,end);
@@ -92,7 +92,7 @@ disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 save([datapath,'/results.mat'],'RE_readout','MEEt','g_readout');
 saveas(h2,[datapath,'/RE_T_' num2str(iTrial) '.jpg'])
 saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
-saveas(h4,[datapath,'/MEE_' num2str(iTrial) '.jpg'])
+saveas(h4,[datapath,'/g-MEE_' num2str(iTrial) '.jpg'])
 
 h=figure;
 plot(g_readout')
