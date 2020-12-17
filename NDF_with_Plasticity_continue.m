@@ -37,6 +37,7 @@ param.pNp = [param.pNp(:,1);pNp];
 load([datapath,'results.mat']);
 %% unpack Connectivity profile 
 MEE = MEEt(:,:,end);
+g = g_readout(:,end);
 MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
@@ -47,7 +48,8 @@ np = param.np;
 y0 = [0;              % Stimlus Current Strength
       0;              % Wipe Current Strength
       zeros(6*nx*np,1);  % 6*N state variables
-      reshape(MEE,nx*nx,1) % E to E Connection Strength
+      reshape(MEE,nx*nx,1); % E to E Connection Strength
+      g % gains
       ]; 
 
 %% load timings
@@ -67,8 +69,10 @@ options = odeset('RelTol',1e-3,'AbsTol',1e-5);
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 new.MEEt = zeros(nx,nx,nTrialAdd);
 new.RE_readout = zeros(nx,np,nTrialAdd);
+new.g_readout = zeros(nx,nTrialAdd);
 MEEt = cat(3,MEEt,new.MEEt);
 RE_readout = cat(3,RE_readout,new.RE_readout);
+g_readout = cat(2,g_readout,new.g_readout);
 clear new
 for iTrial=(nTrialOld+1):param.nTrial
     %% solve current batch
@@ -76,7 +80,8 @@ for iTrial=(nTrialOld+1):param.nTrial
         TrialOn(iTrial):dt_store:TrialEnd(iTrial),y0,options);
     %% unpack and save batch results
     nt = length(t);
-    Mt = y(:,nx*np*6+3:end);Mt = reshape(Mt,nt,nx,nx);
+    gt = y(:,nx*nx+nx*np*6+3:end)';g=gt(:,end);
+    Mt = y(:,nx*np*6+3:nx*nx+nx*np*6+2);Mt = reshape(Mt,nt,nx,nx);
     MEE = Mt(end,:,:); MEE = squeeze(MEE);
     Rt = y(:,3:nx*np*6+2);Rt = reshape(Rt,nt,nx,np,6);Rt = permute(Rt,[2,3,1,4]);
     RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:,:,:,5);SII = Rt(:,:,:,6); 
@@ -102,11 +107,13 @@ for iTrial=(nTrialOld+1):param.nTrial
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS')])
     RE_readout(:,:,iTrial) = RE(:,:,end);
+    g_readout(:,iTrial) = g;
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
             zeros(6*nx*np,1);  % 6*N state variables
-            reshape(MEE,nx*nx,1) % E to E Connection Strength
+            reshape(MEE,nx*nx,1); % E to E Connection Strength
+            g %gain
             ]; 
 end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])

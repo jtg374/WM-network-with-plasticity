@@ -78,7 +78,7 @@ for iTrial=1:nTrial
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS')])
     RE_readout(:,:,iTrial) = RE(:,:,end);
-    g_readout(:,iTrial) = gt(:,end);
+    g_readout(:,iTrial) = g;
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
