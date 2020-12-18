@@ -90,7 +90,7 @@ for iTrial=(nTrialOld+1):param.nTrial
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
     if mod(iTrial,100)==0 | ismember(iTrial,[1,2,5,10,20,50])
-        save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI');
+        save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
         ylabel('neuron')
@@ -104,6 +104,13 @@ for iTrial=(nTrialOld+1):param.nTrial
         colormap(cubehelix)
         colorbar
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
+        h4=figure;
+        imagesc(diag(g)*MEE,[0 10])
+        xlabel('pre-syn')
+        xlabel('post-syn')
+        colormap(cubehelix)
+        colorbar
+        saveas(h4,[datapath,'/ActFigures/g-MEE_' num2str(iTrial) '.jpg'])
     end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS')])
     RE_readout(:,:,iTrial) = RE(:,:,end);
@@ -120,6 +127,9 @@ disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 
 %% save results
 disp(datapath)
-save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3');
+save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3','g_readout');
 save([datapath,'/param.mat'],'-struct','param');
 saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
+saveas(h2,[datapath,'/RE_T_' num2str(iTrial) '.jpg'])
+saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
+saveas(h4,[datapath,'/g-MEE_' num2str(iTrial) '.jpg'])

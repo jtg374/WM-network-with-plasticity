@@ -69,7 +69,7 @@ for iTrial=1:nTrial
         colormap(cubehelix)
         saveas(h3,[datapath,'/ActFigures/RE_X_' num2str(iTrial) '.jpg'])
         h4=figure;
-        imagesc(diag(g)*MEE)
+        imagesc(diag(g)*MEE,[0 10])
         xlabel('pre-syn')
         xlabel('post-syn')
         colormap(cubehelix)
