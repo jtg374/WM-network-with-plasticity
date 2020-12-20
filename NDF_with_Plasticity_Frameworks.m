@@ -1,13 +1,20 @@
-function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrial,r_target)
+function NDF_with_Plasticity_Frameworks(a,b,lrD,lrH,nTrial,r_target)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/UniformPerturb/MultiplictiveHomeo/' 'UniformP' num2str(a*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/RowColPerturb/' 'RowP' num2str(a*100) 'ColP' num2str(b*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
 mkdir([datapath '/ActFigures'])
 %% load parameters
-param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
+param = NDF_with_Plasticity_Parameters(a,b,lrD,lrH,nTrial,r_target)
 save([datapath,'/param.mat'],'-struct','param');
+h = figure;
+imagesc(param.perturbation,[0.5 1])
+xlabel('pre-syn')
+ylabel('post-syn')
+colormap('gray')
+colorbar
+saveas(h,[datapath,'/perturbation.jpg'])
 
 %% unpack Connectivity profile 
 MEE = param.MEE;
@@ -71,7 +78,7 @@ for iTrial=1:nTrial
         h4=figure;
         imagesc(diag(g)*MEE,[0 10])
         xlabel('pre-syn')
-        xlabel('post-syn')
+        ylabel('post-syn')
         colormap(cubehelix)
         colorbar
         saveas(h4,[datapath,'/ActFigures/g-MEE_' num2str(iTrial) '.jpg'])
