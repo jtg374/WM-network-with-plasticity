@@ -89,8 +89,8 @@ for iTrial=(nTrialOld+1):param.nTrial
     MEEt(:,:,iTrial) = MEE;    
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
+    save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
     if mod(iTrial,100)==0 | ismember(iTrial,[1,2,5,10,20,50])
-        save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
         ylabel('neuron')
@@ -131,5 +131,4 @@ save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3','g_readout');
 save([datapath,'/param.mat'],'-struct','param');
 saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
 saveas(h2,[datapath,'/RE_T_' num2str(iTrial) '.jpg'])
-saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
 saveas(h4,[datapath,'/g-MEE_' num2str(iTrial) '.jpg'])

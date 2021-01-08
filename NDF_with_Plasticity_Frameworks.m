@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,b,lrD,lrH,nTrial,r_target)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/RowColPerturb/' 'RowP' num2str(a*100) 'ColP' num2str(b*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/RowColPerturbOtherLR/' 'RowP' num2str(a*100) 'ColP' num2str(b*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
