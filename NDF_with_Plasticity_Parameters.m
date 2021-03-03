@@ -22,49 +22,33 @@ function param = NDF_with_Plasticity_Parameters(a,b,lrD,lrH,nTrial,r_target)
     param.np = np;
     
     %% Connectivity Profile
-    J = 100;
-    JEE = 1*J;JIE = 2*J;JEI = 1*J;JII = 2*J; 
-    sigma_E = 0.2*pi; sigma_I = 0.1*pi; % wider excitatory synaptic projection
-    f_E = 1*exp(-(x/sigma_E).^2);
-    f_I = 1*exp(-(x/sigma_I).^2);
+    JEE = 1; JEI = 1; JIE = 1;
+    sigma_E = 0.2*pi; sigma_I = 1*pi; % wider excitatory synaptic projection
+    fEE = exp(-(x/sigma_E).^2)/(2*pi);
+    fIE = exp(-(x/sigma_E).^2)/(2*pi);
+    fEI = exp(-(x/sigma_I).^2)/(2*pi);
 
 
     MEE = zeros(nx,nx);
+    MIE = zeros(nx,nx);
     MEI = zeros(nx,nx);
 
     for i = 1:nx
-        MEE(i,:) = dx*circshift(f_E,[0 -pi/dx-1+i]);
-        MEI(i,:) = dx*circshift(f_I,[0 -pi/dx-1+i]);
+        MEE(i,:) = JEE*dx*circshift(fEE,[0 -round(pi/(dx))-1+i]);
+        MIE(i,:) = JIE*dx*circshift(fIE,[0 -round(pi/(dx))-1+i]);
+        MEI(i,:) = JEI*dx*circshift(fEI,[0 -round(pi/(dx))-1+i]);
     end
-    MIE = MEE;
-    MII = MEI;
-
-    MEE = JEE*MEE;
-    MIE = JIE*MIE;
-    MEI = JEI*MEI;
-    MII = JII*MII;
 
     param.MEE = MEE;
     param.MIE = MIE;
     param.MEI = MEI;
-    param.MII = MII;
 
     %% Transfer Function
-    NE = 2;
-    thE = 10;
-    sigE = 40;
-    maxfE = 100;
-    qE = @(x) maxfE*(x-thE).^NE./(sigE^NE+(x-thE).^NE).*(x>thE);
-    
-    NI = 2;
-    thI = 10;
-    sigI = 40;
-    maxfI = 100;
-    qI = @(x) maxfI*(x-thI).^NI./(sigI^NI+(x-thI).^NI).*(x>thI);
-%     param.qE = qE;
-%     param.qI = qI;
-    param.qE = @(x) x.*(x>0) - (x-maxfE).*(x>maxfE);
-    param.qI = @(x) x.*(x>0) - (x-maxfI).*(x>maxfI);
+    qE = @(x) 7*((0.2*(x-1)+0.5).*(x<=1) + (2*(x-1)+0.5).*(x>1).*(x<=2) + (1*(x-2)+2.5).*(x>2).*(x<14) + 14.5.*(x>14));
+    qI = @(x) x;
+    param.qE = qE;
+    param.qI = qI;
+
     %% Perturbations
 %     % % smooth local perturbation
     center_x = 0*pi;
@@ -126,8 +110,11 @@ function param = NDF_with_Plasticity_Parameters(a,b,lrD,lrH,nTrial,r_target)
 %     param.MIE = MIE;param.MIE_unperturbed = MIE0;
 %     param.MII = MII;param.MII_unperturbed = MII0;
     %% External Input
-    JEO = 2*J;
-    IEO_init = 1.35*(exp(-(x/(pi/4)).^2)'+1*ones(nx,1));
+    param.IEc = 0.6*ones(nx,1);
+    
+    JEO = 1;
+    sigma_o = 0.2*pi;
+    IEO_init = 0.5*(exp(-(x/sigma_o).^2)'+1*ones(nx,1));
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;

@@ -8,7 +8,7 @@ MEE = y(N*np*6+3:N*np*6+N*N+2);
 MEE = reshape(MEE,N,N);
 MEI = param.MEI;
 MIE = param.MIE;
-MII = param.MII;
+MII = zeros(N);
 R = y(3:N*np*6+2);R = reshape(R,N,np,6);RE = R(:,:,1);RI = R(:,:,2);SEE = R(:,:,3);SIE = R(:,:,4);SEI = R(:,:,5);SII = R(:,:,6);
 IStim = y(1); IWipe=y(2);
 
@@ -30,13 +30,14 @@ for ip=1:np
     IEo(:,ip) = circshift(param.IEo,shift(ip));
     IIo(:,ip) = circshift(param.IIo,shift(ip));
 end
+IEc = param.IEc;
 % transfer function
 qE = param.qE;
 qI = param.qI;
 
 % main ode eqs
 % % Neurons Populations and Synapses
-dRe = 1./param.TE .*( -RE + qE(diag(g)*MEE.*(MEE>=0)*SEE - MEI*SEI + IEo*IStim)*(1-IWipe));
+dRe = 1./param.TE .*( -RE + qE(diag(g)*MEE.*(MEE>=0)*SEE - MEI*SEI + IEc + IEo*IStim)*(1-IWipe));
 dRi = 1./param.TI .*( -RI + qI(MIE*SIE - MII*SII + IIo*IStim)*(1-IWipe));
 dSee= 1./param.TEE.*(-SEE + RE);
 dSie= 1./param.TIE.*(-SIE + RE);
