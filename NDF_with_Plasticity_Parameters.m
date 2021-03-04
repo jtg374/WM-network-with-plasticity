@@ -114,7 +114,7 @@ function param = NDF_with_Plasticity_Parameters(a,b,lrD,lrH,nTrial,r_target)
     
     JEO = 1;
     sigma_o = 0.2*pi;
-    IEO_init = 0.5*(exp(-(x/sigma_o).^2)'+1*ones(nx,1));
+    IEO_init = 0.6*(exp(-(x/sigma_o).^2)'+0.8*ones(nx,1));
     
     param.IEo = JEO*IEO_init;
     param.IIo = 0;
