@@ -1,6 +1,6 @@
 function NDF_with_Plasticity_Frameworks(a,b,lrD,lrH,nTrial,r_target)
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/RowColPerturbOtherLR/' 'RowP' num2str(a*100) 'ColP' num2str(b*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/PosNet/' 'RowP' num2str(a*100) 'ColP' num2str(b*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
@@ -18,9 +18,6 @@ saveas(h,[datapath,'/perturbation.jpg'])
 
 %% unpack Connectivity profile 
 MEE = param.MEE;
-MEI = param.MEI;
-MIE = param.MIE;
-MII = param.MII;
 
 %% pack initial values
 nx = param.N;
@@ -41,8 +38,6 @@ dt_store = param.dt_store;
 options = odeset('RelTol',1e-3,'AbsTol',1e-5); 
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
 nTrial = param.nTrial;
-D = 1; % initially, set decoding error to maximum
-DList = [];
 MEEt = zeros(nx,nx,nTrial);
 RE_readout = zeros(nx,np,nTrial);
 g_readout = zeros(nx,nTrial);
