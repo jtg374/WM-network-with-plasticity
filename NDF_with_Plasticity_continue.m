@@ -38,9 +38,6 @@ load([datapath,'results.mat']);
 %% unpack Connectivity profile 
 MEE = MEEt(:,:,end);
 g = g_readout(:,end);
-MEI = param.MEI;
-MIE = param.MIE;
-MII = param.MII;
 
 %% pack initial values
 nx = param.N;
