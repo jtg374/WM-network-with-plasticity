@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
+function param = NDF_with_Plasticity_Parameters(a,lr,nTrial,r_target)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -205,13 +205,10 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_XS_expr = '@(x,dx)  -lrD .* dx*x'' '; %differential plasticity 
-    param.fM_homeo_expr = '@(x,g)  lrH * (r_target-x).*g '; %homeostatic plasticity
-    param.fM_XS = eval(param.fM_XS_expr);
-    param.fM_homeo = eval(param.fM_homeo_expr);
-    param.LearningRateDifferential = lrD;
+    param.fM_IP_expr = '@(xi,xj)  -lr .* (xi-r_target)*xj'' '; %differential plasticity 
+    param.fM_IP = eval(param.fM_IP_expr);
+    param.LearningRateIP = lr;
     
-    param.LearningRateHomeostatic = lrH;
     param.r_target = r_target;
     
     
