@@ -5,7 +5,7 @@ N = param.N;
 np = param.np;
 g = y(N*N+N*np*6+3:end);
 MEI = y(N*np*6+3:N*np*6+N*N+2);
-MEI = reshape(MEE,N,N);
+MEI = reshape(MEI,N,N);
 MEE = param.MEE;
 MIE = param.MIE;
 MII = param.MII;
@@ -50,7 +50,7 @@ dIw = 1./param.Tinput .*( -IWipe + sum(t>=(TDelayOff+0)) - sum(t>TForgetOff) );
 if any( (t>TStimOff).* (t<TDelayOff) )
     %
     fM_IP = param.fM_IP;
-    dMEI= fM_XS(RE(:,iS),RI(:,iS))* (1-IStim)-MEI.*(MEI<0);
+    dMEI= fM_IP(RE(:,iS),RI(:,iS))* (1-IStim)-MEI.*(MEI<0);
     dg  = zeros(N,1);
     %
 else 
