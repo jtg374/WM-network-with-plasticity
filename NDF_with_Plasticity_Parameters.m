@@ -205,7 +205,7 @@ function param = NDF_with_Plasticity_Parameters(a,lr,nTrial,r_target)
 
     %% additional parameters for plasticity
     % x: nx by 1, x: post-syn, x': pre-syn
-    param.fM_IP_expr = '@(xi,xj)  -lr .* (xi-r_target)*xj'' '; %differential plasticity 
+    param.fM_IP_expr = '@(xi,xj)  lr .* (xi-r_target)*xj'' '; %differential plasticity 
     param.fM_IP = eval(param.fM_IP_expr);
     param.LearningRateIP = lr;
     
