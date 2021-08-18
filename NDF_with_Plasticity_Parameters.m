@@ -1,4 +1,4 @@
-function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
+function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target,perturbationType)
     %% Time constants
     % % neurons 
     param.TE = 20; % Excitatory population
@@ -66,6 +66,42 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
     param.qE = @(x) x.*(x>0) - (x-maxfE).*(x>maxfE);
     param.qI = @(x) x.*(x>0) - (x-maxfI).*(x>maxfI);
     %% Perturbations
+    switch perturbationType
+        case 'Uniform'
+            % global perturbation
+            MEE0 = MEE; MEE = MEE*a;
+            param.MEE = MEE;
+            param.MEE_unperturbed = MEE0;
+            param.perturbation_type = 'Global';
+            param.perturbation_strength = a;            
+        case 'Row'
+            % % smooth local perturbation
+            index_x = 0*pi;
+            width_x = pi/4
+            perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
+            param.perturbation = perturbation;
+            perturbation = repmat(perturbation',1,nx);
+            MEE0 = MEE; MEE = MEE.*perturbation;
+            param.MEE = MEE;
+            param.MEE_unperturbed = MEE0;
+            param.perturbation_type = 'local-rowwise(postsyn)';
+            param.perturbation_strength = a;    
+            param.perturbation_index = index_x;
+            param.perturbation_width = width_x;
+        case 'Col'
+            index_x = 0*pi;
+            width_x = pi/4
+            perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
+            param.perturbation = perturbation;
+            perturbation = repmat(perturbation',nx,1);
+            MEE0 = MEE; MEE = MEE.*perturbation;
+            param.MEE = MEE;
+            param.MEE_unperturbed = MEE0;
+            param.perturbation_type = 'local-colwise(presyn)';
+            param.perturbation_strength = a;    
+            param.perturbation_index = index_x;
+            param.perturbation_width = width_x;
+    end
 %     a = 0.9;
     % %sharp local perturbation 
 %     index_x = 0:dx:pi/8;
@@ -98,25 +134,8 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
 %     param.MEE_unperturbed = MEE0;
 %     param.perturbation_type = 'local-colwise(presyn)';
 %     param.perturbation_strength = a;    
-%     % % smooth local perturbation
-%     index_x = 0.125*pi;
-%     width_x = pi/4
-%     perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
-%     param.perturbation = perturbation;
-%     perturbation = repmat(perturbation',1,nx);
-%     MEE0 = MEE; MEE = MEE.*perturbation;
-%     param.MEE = MEE;
-%     param.MEE_unperturbed = MEE0;
-%     param.perturbation_type = 'local-rowwise(postsyn)';
-%     param.perturbation_strength = a;    
-%     param.perturbation_index = index_x;
-%     param.perturbation_width = width_x;
-% global perturbation
-    MEE0 = MEE; MEE = MEE*a;
-    param.MEE = MEE;
-    param.MEE_unperturbed = MEE0;
-    param.perturbation_type = 'Global';
-    param.perturbation_strength = a;
+
+
 % random perturbation
 %     a = 0.01;
 %     param.perturbation_strength = a;

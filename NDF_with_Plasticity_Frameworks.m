@@ -1,12 +1,31 @@
-function NDF_with_Plasticity_Frameworks(a,lrD,lrH,nTrial,r_target)
+function NDF_with_Plasticity_Frameworks(a,lrD,lrH,varargin)
+options = struct('nTrial', 5000,...
+                'r_target', 20,...
+                'perturbation','Uniform'); % Uniform, Row, Col
+optionNames = fieldnames(options);
+if mod(length(varargin),2) == 1
+    error('Please provide propertyName/propertyValue pairs')
+end
+for pair = reshape(varargin,2,[])    % pair is {propName; propValue}
+    if any(strcmp(pair{1}, optionNames))
+        options.(pair{1}) = pair{2};
+    else
+        error('%s is not a recognized parameter name', pair{1})
+    end
+end
+%
+                
+nTrial=options.nTrial;
+r_target=options.r_target;
+perturbationType = options.perturbation;
 % clc;clear all;close all;    
-datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/UniformPerturb/MultiplictiveHomeo/' 'UniformP' num2str(a*100) 'DLR' num2str(lrD) 'HLR' num2str(lrH) datestr(now,'_yymmdd_HH_MM') 'Trial' num2str(nTrial) ];
+datapath = ['/gpfsnyu/scratch/jtg374/WM_Plasticity/OtherLR/' perturbationType 'P' num2str(a*100) 'DLR' num2str(lrD,'%.0e') 'HLR' num2str(lrH,'%.0e') datestr(now,'_yymmdd_HH_MM') ];
 mkdir(datapath)
 disp(datapath)
 mkdir([datapath '/FullData'])
 mkdir([datapath '/ActFigures'])
 %% load parameters
-param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target)
+param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target,perturbationType)
 save([datapath,'/param.mat'],'-struct','param');
 
 %% unpack Connectivity profile 
@@ -52,10 +71,10 @@ for iTrial=1:nTrial
     RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:,:,:,5);SII = Rt(:,:,:,6); 
     clear Rt;
     MEEt(:,:,iTrial) = MEE;    
-    save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
-    if mod(iTrial,100)==0 | ismember(iTrial,[1,2,5,10,20,50])
+    if mod(iTrial,500)==0 | ismember(iTrial,[1,2,5,10,20,50,100,200])
+        save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
         ylabel('neuron')

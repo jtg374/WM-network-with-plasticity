@@ -5,8 +5,9 @@
 #SBATCH -o result.%J.out
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jtg374@nyu.edu
-#SBATCH -t 0-15:00
+#SBATCH -t 1-00:00
 
 module purge
 module load matlab/2018a
-matlab -nodisplay -r "NDF_with_Plasticity_Frameworks($4,$1,$2,$3,20);quit"
+Cmd=$(printf '%s' "$1" )
+matlab -nodisplay -r "$Cmd;quit"
