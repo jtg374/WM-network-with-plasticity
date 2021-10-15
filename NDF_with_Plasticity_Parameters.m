@@ -77,7 +77,7 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target,pertur
         case 'Row'
             % % smooth local perturbation
             index_x = 0*pi;
-            width_x = pi/4
+            width_x = pi/4;
             perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
             param.perturbation = perturbation;
             perturbation = repmat(perturbation',1,nx);
@@ -90,10 +90,10 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target,pertur
             param.perturbation_width = width_x;
         case 'Col'
             index_x = 0*pi;
-            width_x = pi/4
+            width_x = pi/4;
             perturbation = 1 - (1-a)*exp(-((x-index_x)/width_x).^2);
             param.perturbation = perturbation;
-            perturbation = repmat(perturbation',nx,1);
+            perturbation = repmat(perturbation,nx,1);
             MEE0 = MEE; MEE = MEE.*perturbation;
             param.MEE = MEE;
             param.MEE_unperturbed = MEE0;
@@ -216,7 +216,7 @@ function param = NDF_with_Plasticity_Parameters(a,lrD,lrH,nTrial,r_target,pertur
     stimLoc = stimLoc - nx/2; % center to zero
     stimLoc_theta = stimLoc/nx*2*pi;
 
-    pNp = randi(np,nTrialMax);
+    pNp = randi(np,nTrialMax,1);
 
     param.stimLoc = stimLoc;
     param.stimLoc_theta = stimLoc_theta;
