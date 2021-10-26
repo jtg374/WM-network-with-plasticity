@@ -1,43 +1,11 @@
-function NDF_with_Plasticity_continue(datapath,nTrialAdd,modTrial)
+function NDF_with_Plasticity_FillInMiddle(datapath,iTrialBegin,iTrialEnd)
     disp(datapath)
 
 param = load([datapath,'param.mat']);
-nx = param.N;
-np = param.np;
-
-T_on = param.TStimOn(1);
-Tstim = param.TStimOff(1)-param.TStimOn(1);
-Tmemory = param.TDelayOff(1) - param.TStimOff(1);
-Tforget = param.TForgetOff(1) - param.TDelayOff(1);
-tTrial = T_on+Tstim+Tmemory+Tforget; % length of a trial
-tMin = param.Tmax;
-tMax = param.Tmax + nTrialAdd*tTrial;
-param.Tmax = tMax;
-
-TStimOn = T_on:tTrial:tMax;
-
-nTrialOld = param.nTrial;
-param.nTrial = param.nTrial + nTrialAdd
-param.TStimOn   = TStimOn;
-param.TrialOn   = TStimOn-T_on;
-param.TStimOff  = TStimOn+Tstim;
-param.TDelayOff = TStimOn+Tstim+Tmemory;
-param.TForgetOff= TStimOn+Tstim+Tmemory+Tforget;
-
-stimLoc = randi(floor(nx/np),np,nTrialAdd); % random location in each group (1-4)
-stimLoc = stimLoc + (0:floor(nx/np):(nx-1))'; % add level to each group
-stimLoc = stimLoc - nx/2; % center to zero
-stimLoc_theta = stimLoc/nx*2*pi;
-pNp = randi(np,nTrialAdd,1);
-
-param.stimLoc = [param.stimLoc stimLoc];
-param.stimLoc_theta = [param.stimLoc_theta stimLoc_theta];
-param.pNp = [param.pNp(:,1);pNp];
-
 load([datapath,'results.mat']);
 %% unpack Connectivity profile 
-MEE = MEEt(:,:,end);
-g = g_readout(:,end);
+MEE = MEEt(:,:,iTrialBegin-1);
+g = g_readout(:,iTrialBegin-1);
 MEI = param.MEI;
 MIE = param.MIE;
 MII = param.MII;
@@ -67,14 +35,7 @@ r_target = param.r_target;
 %% Solving ODE equations
 options = odeset('RelTol',1e-3,'AbsTol',1e-5); 
 disp(['Integration started at: ',datestr(now,'HH:MM:SS')])
-new.MEEt = zeros(nx,nx,nTrialAdd);
-new.RE_readout = zeros(nx,np,nTrialAdd);
-new.g_readout = zeros(nx,nTrialAdd);
-MEEt = cat(3,MEEt,new.MEEt);
-RE_readout = cat(3,RE_readout,new.RE_readout);
-g_readout = cat(2,g_readout,new.g_readout);
-clear new
-for iTrial=(nTrialOld+1):param.nTrial
+for iTrial=iTrialBegin:iTrialEnd
     %% solve current batch
     [t,y] = ode23(@(t,y0) NDF_with_Plasticity_Equations(t,y0,param),...
         TrialOn(iTrial):dt_store:TrialEnd(iTrial),y0,options);
@@ -86,10 +47,9 @@ for iTrial=(nTrialOld+1):param.nTrial
     Rt = y(:,3:nx*np*6+2);Rt = reshape(Rt,nt,nx,np,6);Rt = permute(Rt,[2,3,1,4]);
     RE = Rt(:,:,:,1);RI = Rt(:,:,:,2);SEE = Rt(:,:,:,3);SIE = Rt(:,:,:,4);SEI = Rt(:,:,:,5);SII = Rt(:,:,:,6); 
     clear Rt;
-    MEEt(:,:,iTrial) = MEE;    
     %% plot and save
     addpath('/gpfsnyu/home/jtg374/MATLAB/CubeHelix') 
-    if mod(iTrial,modTrial)==0 | ismember(iTrial,[1,2,5,10,20,50,100,200,500,1000,2000])
+    % if mod(iTrial,modTrial)==0 | ismember(iTrial,[1,2,5,10,20,50,100,200,500,1000,2000])
         save([datapath,'/FullData/results_' num2str(iTrial) '.mat'],'t','RE','RI','gt');
         h2=figure; %imagesc([RE RE1])
         imagesc(squeeze(RE(:,param.pNp(iTrial),:)),[0 50]);
@@ -97,6 +57,7 @@ for iTrial=(nTrialOld+1):param.nTrial
         xlabel('Time')
         colormap(cubehelix)
         saveas(h2,[datapath,'/ActFigures/RE_T_' num2str(iTrial) '.jpg'])
+        saveas(h2,[datapath,'/ActFigures/RE_T_' num2str(iTrial) '.eps'],'epsc')
         h3=figure;
         imagesc(RE(:,:,end),[0 50])
         xlabel('stim position')
@@ -111,10 +72,9 @@ for iTrial=(nTrialOld+1):param.nTrial
         colormap(cubehelix)
         colorbar
         saveas(h4,[datapath,'/ActFigures/g-MEE_' num2str(iTrial) '.jpg'])
-    end
+    % end
     disp([num2str(iTrial) ' trials completed at: ',datestr(now,'HH:MM:SS')])
-    RE_readout(:,:,iTrial) = RE(:,:,end);
-    g_readout(:,iTrial) = g;
+
     %% update to next batch
     y0 = [  0;              % Stimlus Current Strength
             0;              % Wipe Current Strength
@@ -125,21 +85,4 @@ for iTrial=(nTrialOld+1):param.nTrial
 end
 disp(['Integration ended at:   ',datestr(now,'HH:MM:SS')])
 
-%% save results
-disp(datapath)
-save([datapath,'/results.mat'],'RE_readout','MEEt','-v7.3','g_readout');
-save([datapath,'/param.mat'],'-struct','param');
-saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
-saveas(h2,[datapath,'/RE_T_' num2str(iTrial) '.jpg'])
-saveas(h3,[datapath,'/RE_X_' num2str(iTrial) '.jpg'])
-saveas(h4,[datapath,'/g-MEE_' num2str(iTrial) '.jpg'])
 
-h=figure;
-plot(g_readout')
-c = hsv(nx);
-set(gca, 'ColorOrder',c, 'NextPlot','ReplaceChildren');
-plot(g_readout')
-xlabel('Trial')
-ylabel('gain')
-saveas(h,[datapath,'/gain.fig'])
-saveas(h,[datapath,'/gain.jpg'])
