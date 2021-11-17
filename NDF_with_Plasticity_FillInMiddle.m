@@ -3,6 +3,10 @@ function NDF_with_Plasticity_FillInMiddle(datapath,iTrialBegin,iTrialEnd)
 
 param = load([datapath,'param.mat']);
 load([datapath,'results.mat']);
+if nargin==1
+    iTrialEnd = param.nTrial;
+    iTrialBegin = iTrialEnd-9;
+end
 %% unpack Connectivity profile 
 MEE = MEEt(:,:,iTrialBegin-1);
 g = g_readout(:,iTrialBegin-1);
